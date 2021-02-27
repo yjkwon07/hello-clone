@@ -18,7 +18,7 @@ const LOGIN_SCHEMA = yup.object().shape({
 
 type FormData = yup.InferType<typeof LOGIN_SCHEMA>;
 
-export default function LogIn() {
+const LogIn = () => {
   const { data, mutate } = useSWR(USER_FETCH, fetcher);
 
   const [logInError, setLogInError] = useState(false);
@@ -79,11 +79,13 @@ export default function LogIn() {
       </LinkContainer>
 
       <ConfirmModal
-        open={logInError}
+        show={logInError}
         title="Error"
         description="이메일과 비밀번호 조합이 일치하지 않습니다."
-        onConfirm={() => setLogInError(false)}
+        onCloseModal={() => setLogInError(false)}
       />
     </div>
   );
-}
+};
+
+export default LogIn;

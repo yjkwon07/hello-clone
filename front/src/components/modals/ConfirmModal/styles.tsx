@@ -14,11 +14,11 @@ export const Container = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: 320px;
-  background: white;
+  /* width: 320px; */
+  /* background: white; */
   padding: 1.5rem;
   border-radius: 4px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.125);
+  /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.125); */
   h2 {
     margin-top: 0;
     margin-bottom: 1rem;

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button, Container, Wrapper } from './styles';
+import React, { FC } from 'react';
+import Modal, { Props as IModal } from '@components/atoms/Modal';
+import { Button, Wrapper } from '@components/modals/ConfirmModal/styles';
 
-interface Props {
-  open: boolean;
+interface Props extends IModal {
   title: 'Success' | 'Info' | 'Error' | 'Warn';
   description: string;
   confirmText?: string;
@@ -11,38 +11,33 @@ interface Props {
   onCancel?: () => void;
 }
 
-export default function ConfirmModal({
-  open,
+const ConfirmModal: FC<Props> = ({
+  show,
   title,
   description,
   confirmText,
   cancelText,
+  onCloseModal,
   onConfirm,
   onCancel,
-}: Props) {
-  if (!open) return null;
-
+}) => {
   return (
-    <Container>
+    <Modal show={show} onCloseModal={onCloseModal}>
       <Wrapper>
         <h2>{title}</h2>
         <p>{description}</p>
         <div className="buttons">
           {onCancel && <Button onClick={onCancel}>{cancelText}</Button>}
-          {onConfirm && (
-            <Button autoFocus onClick={onConfirm}>
-              {confirmText}
-            </Button>
-          )}
+          {onConfirm && <Button onClick={onConfirm}>{confirmText}</Button>}
         </div>
       </Wrapper>
-    </Container>
+    </Modal>
   );
-}
+};
 
 ConfirmModal.defaultProps = {
   confirmText: '확인',
   cancelText: '취소',
-  onConfirm: undefined,
-  onCancel: undefined,
 };
+
+export default ConfirmModal;

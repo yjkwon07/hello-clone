@@ -27,7 +27,7 @@ const SIGNUP_SCHEMA = yup.object().shape({
 
 type FormData = yup.InferType<typeof SIGNUP_SCHEMA>;
 
-export default function SignUp() {
+const SignUp = () => {
   const { data } = useSWR(USER_FETCH, fetcher);
 
   const [signUpError, setSignUpError] = useState('');
@@ -106,12 +106,19 @@ export default function SignUp() {
       </LinkContainer>
 
       <ConfirmModal
-        open={signUpSuccess}
+        show={signUpSuccess}
         title="Success"
         description="회원가입되었습니다! 로그인해주세요."
-        onConfirm={() => setSignUpSuccess(false)}
+        onCloseModal={() => setSignUpSuccess(false)}
       />
-      <ConfirmModal open={!!signUpError} title="Error" description={signUpError} onConfirm={() => setSignUpError('')} />
+      <ConfirmModal
+        show={!!signUpError}
+        title="Error"
+        description={signUpError}
+        onCloseModal={() => setSignUpError('')}
+      />
     </div>
   );
-}
+};
+
+export default SignUp;

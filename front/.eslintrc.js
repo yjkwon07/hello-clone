@@ -46,6 +46,8 @@ module.exports = {
   },
   /* extends와 plugins에 대한 세부 설정을 변경 */
   rules: {
+    'no-console': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.tsx', '.ts'] }],
     'no-use-before-define': 'off', // 정의되기 전에 사용되도록 허용 ('React' was used before it was defined)
     '@typescript-eslint/no-use-before-define': ['error'],

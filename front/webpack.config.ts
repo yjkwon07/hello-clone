@@ -18,7 +18,8 @@ const config: webpack.Configuration = {
       // 절대경로, 바벨이 경로를 보고 바꿔주는용. tsconfig는 단지 타이핑 체크 용
       '@assets': path.resolve(__dirname, 'src/assets'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
-      '@components': path.resolve(__dirname, 'src/1components'),
+      '@API': path.resolve(__dirname, 'src/API'),
+      '@components': path.resolve(__dirname, 'src/components'),
       '@layouts': path.resolve(__dirname, 'src/layouts'),
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@utils': path.resolve(__dirname, 'src/utils'),
@@ -147,13 +148,18 @@ const config: webpack.Configuration = {
   output: {
     path: path.join(__dirname, 'dist'), // 실제 경로
     filename: 'static/js/[name].[chunkhash].js',
-    publicPath: '/dist/',
+    publicPath: '/',
   },
   devServer: {
     historyApiFallback: true, // react router
     port: 3090,
     contentBase: path.join(__dirname, 'dist'),
-    publicPath: '/dist/',
+    // proxy: {
+    //   '/api/': {
+    //     target: 'http://localhost:3095',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
 };
 

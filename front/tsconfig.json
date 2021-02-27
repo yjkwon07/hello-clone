@@ -13,6 +13,7 @@
     "paths": { // 절대경로 설정
       "@assets/*": ["assets/*"],
       "@hooks/*": ["hooks/*"],
+      "@API/*": ["API/*"],
       "@components/*": ["components/*"],
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],

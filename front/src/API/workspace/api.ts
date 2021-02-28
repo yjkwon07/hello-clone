@@ -10,3 +10,8 @@ export const addWorkSpace = (data: IAddWorkSpace) => {
   const queryData = queryInfoData.addWorkSpace;
   return axios.post(queryData.API(), data);
 };
+
+export const listReadWorkSpace = () => {
+  const queryData = queryInfoData.listReadWorkSpace;
+  return axios.post(queryData.API());
+};

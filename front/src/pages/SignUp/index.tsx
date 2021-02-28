@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useSWR from 'swr';
+import { Button, Error, Input, Label, ValidationWrapper } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
-import { Form, Error, Label, Input, ValidationWrapper, LinkContainer, Button, Header } from '@pages/SignUp/styles';
+import { Form, LinkContainer, Header } from '@pages/SignUp/styles';
 import { signup as signupAPI } from '@API/user';
 import fetcher from '@utils/fetcher';
-import { CHANNEL_URL } from '@utils/url';
+import { GET_CHANNEL_URL } from '@utils/url';
 import { INIT, USER_FETCH } from '@utils/swrConstants';
 
 const SIGNUP_SCHEMA = yup.object().shape({
@@ -58,7 +59,7 @@ const SignUp = () => {
   }
 
   if (data) {
-    return <Redirect to={CHANNEL_URL} />;
+    return <Redirect to={GET_CHANNEL_URL('sleact', '일반')} />;
   }
 
   return (

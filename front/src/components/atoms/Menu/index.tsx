@@ -3,12 +3,12 @@ import { CloseModalButton, Container } from '@components/atoms/Menu/styles';
 
 interface Props {
   show: boolean;
-  onCloseModal: (e: React.SyntheticEvent) => void;
+  onClose: (e: React.SyntheticEvent) => void;
   style: CSSProperties;
   closeButton?: boolean;
 }
 
-const Menu: FC<Props> = ({ children, style, show, onCloseModal, closeButton }) => {
+const Menu: FC<Props> = ({ children, style, show, onClose, closeButton }) => {
   const stopPropagation = useCallback((e: React.SyntheticEvent) => {
     e.stopPropagation();
   }, []);
@@ -16,9 +16,9 @@ const Menu: FC<Props> = ({ children, style, show, onCloseModal, closeButton }) =
   if (!show) return null;
 
   return (
-    <Container onClick={onCloseModal}>
+    <Container onClick={onClose}>
       <div role="presentation" style={style} onClick={stopPropagation}>
-        {closeButton && <CloseModalButton onClick={onCloseModal}>&times;</CloseModalButton>}
+        {closeButton && <CloseModalButton onClick={onClose}>&times;</CloseModalButton>}
         {children}
       </div>
     </Container>

@@ -31,6 +31,18 @@ const queryInfoData = {
   },
 
   /**
+   * * 로그아웃 POST
+   * * /api/logout
+   */
+  logout: {
+    API() {
+      return '/api/users/logout';
+    },
+    method: 'post',
+    bodyQuery: {},
+  },
+
+  /**
    * * 유저 정보 조회 GET
    * * /api/login
    */

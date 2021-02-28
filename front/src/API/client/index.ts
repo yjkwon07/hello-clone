@@ -18,5 +18,5 @@ export const axiosSetting = {
 
 export const axios = Axios.create({
   baseURL: axiosSetting.server(),
-  withCredentials: true
+  withCredentials: true,
 });

@@ -25,7 +25,7 @@ module.exports = {
   ],
   settings: {
     react: {
-      version: 'latest', // eslint-plugin-react에게 사용하고 있는 리액트의 버전을 알아서 탐지하도록 한다.
+      version: 'detect', // eslint-plugin-react에게 사용하고 있는 리액트의 버전을 알아서 탐지하도록 한다.
     },
     'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
     'import/parsers': {
@@ -49,6 +49,7 @@ module.exports = {
     'no-console': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/prop-types': 'off',
+    'react/jsx-props-no-spreading': ['error', { custom: 'ignore' }],
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.tsx', '.ts'] }],
     'no-use-before-define': 'off', // 정의되기 전에 사용되도록 허용 ('React' was used before it was defined)
     '@typescript-eslint/no-use-before-define': ['error'],

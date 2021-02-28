@@ -4,12 +4,13 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useSWR from 'swr';
+import { Button, Label, ValidationInput, Form } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
-import { Form, Error, Label, Input, LinkContainer, Button, Header, ValidationWrapper } from '@pages/SignUp/styles';
+import { LinkContainer, Header } from '@pages/SignUp/styles';
 import { login as loginAPI } from '@API/user';
 import fetcher from '@utils/fetcher';
-import { CHANNEL_URL } from '@utils/url';
 import { INIT, USER_FETCH } from '@utils/swrConstants';
+import { GET_CHANNEL_URL, SIGNUP_URL } from '@utils/url';
 
 const LOGIN_SCHEMA = yup.object().shape({
   email: yup.string().email('올바르지 않은 이메일 양식입니다.').required('이메일은 필수 입력입니다.'),
@@ -47,7 +48,7 @@ const LogIn = () => {
   }
 
   if (data) {
-    return <Redirect to={CHANNEL_URL} />;
+    return <Redirect to={GET_CHANNEL_URL('sleact', '일반')} />;
   }
 
   return (
@@ -56,18 +57,18 @@ const LogIn = () => {
       <Form onSubmit={handleSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
-          <ValidationWrapper>
-            <Input id="email" name="email" ref={register} />
-            {errors && <Error>{errors.email?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'text', id: 'email', name: 'email', ref: register }}
+            errMessage={errors.password?.message}
+          />
         </Label>
 
         <Label id="password-label">
           <span>비밀번호</span>
-          <ValidationWrapper>
-            <Input type="password" id="password" name="password" ref={register} />
-            {errors && <Error>{errors.password?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'password', id: 'password', name: 'password', ref: register }}
+            errMessage={errors.password?.message}
+          />
         </Label>
 
         <Button type="submit">로그인</Button>
@@ -75,7 +76,7 @@ const LogIn = () => {
 
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
-        <Link to="/signup">회원가입 하러가기</Link>
+        <Link to={SIGNUP_URL}>회원가입 하러가기</Link>
       </LinkContainer>
 
       <ConfirmModal

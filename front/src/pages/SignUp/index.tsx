@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useSWR from 'swr';
-import { Button, Error, Input, Label, ValidationWrapper } from '@components/atoms';
+import { Button, ValidationInput, Label, Form } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
-import { Form, LinkContainer, Header } from '@pages/SignUp/styles';
+import { LinkContainer, Header } from '@pages/SignUp/styles';
 import { signup as signupAPI } from '@API/user';
 import fetcher from '@utils/fetcher';
-import { GET_CHANNEL_URL } from '@utils/url';
 import { INIT, USER_FETCH } from '@utils/swrConstants';
+import { GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
 
 const SIGNUP_SCHEMA = yup.object().shape({
   email: yup.string().email('올바르지 않은 이메일 양식입니다.').required('이메일은 필수 입력입니다.'),
@@ -68,34 +68,34 @@ const SignUp = () => {
       <Form onSubmit={handleSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
-          <ValidationWrapper>
-            <Input id="email" name="email" ref={register} />
-            {errors && <Error>{errors.email?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'text', id: 'email', name: 'email', ref: register }}
+            errMessage={errors.email?.message}
+          />
         </Label>
 
         <Label id="nickname-label">
           <span>닉네임</span>
-          <ValidationWrapper>
-            <Input type="text" id="nickname" name="nickname" ref={register} />
-            {errors && <Error>{errors.nickname?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'text', id: 'nickname', name: 'nickname', ref: register }}
+            errMessage={errors.nickname?.message}
+          />
         </Label>
 
         <Label id="password-label">
           <span>비밀번호</span>
-          <ValidationWrapper>
-            <Input type="password" id="password" name="password" ref={register} />
-            {errors && <Error>{errors.password?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'password', id: 'password', name: 'password', ref: register }}
+            errMessage={errors.password?.message}
+          />
         </Label>
 
         <Label id="password-check-label">
           <span>비밀번호 확인</span>
-          <ValidationWrapper>
-            <Input type="password" id="password-check" name="password-check" ref={register} />
-            {errors && <Error>{errors['password-check']?.message}</Error>}
-          </ValidationWrapper>
+          <ValidationInput
+            inputProps={{ type: 'password', id: 'password-check', name: 'password-check', ref: register }}
+            errMessage={errors['password-check']?.message}
+          />
         </Label>
 
         <Button type="submit">회원가입</Button>
@@ -103,7 +103,7 @@ const SignUp = () => {
 
       <LinkContainer>
         이미 회원이신가요?&nbsp;
-        <Link to="/login">로그인 하러가기</Link>
+        <Link to={LOGIN_URL}>로그인 하러가기</Link>
       </LinkContainer>
 
       <ConfirmModal

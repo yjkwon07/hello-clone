@@ -1,15 +1,11 @@
 import React, { FC, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
-import { addWorkSpace as addWorkSpaceAPI } from '@API/workspace';
-import fetcher from '@utils/fetcher';
-import { USER_FETCH } from '@utils/swrConstants';
-import { IUser } from '@typings/db';
+import { addWorkSpace as addWorkSpaceAPI, useListWorkspace } from '@API/workspace';
 
 type Props = IModal;
 
@@ -21,7 +17,7 @@ const WORKSPACE_SCHEMA = yup.object().shape({
 type FormData = yup.InferType<typeof WORKSPACE_SCHEMA>;
 
 const AddWorkSpaceModal: FC<Props> = ({ show, onCloseModal }) => {
-  const { revalidate } = useSWR<IUser | false>(USER_FETCH, fetcher);
+  const { revalidate } = useListWorkspace();
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);

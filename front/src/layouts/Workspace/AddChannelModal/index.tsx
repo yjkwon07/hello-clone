@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
-import { useUser } from '@API/user';
 import { addChannel as addChannelAPI, useListWorkspaceChannel } from '@API/workspaceChannel';
 
 type Props = IModal;
@@ -19,8 +18,7 @@ type FormData = yup.InferType<typeof CHANNEL_SCHEMA>;
 
 const AddChannelModal: VFC<Props> = ({ show, onCloseModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
-  const { data: userData } = useUser();
-  const { data: channelData, mutate } = useListWorkspaceChannel(!!userData, workspace);
+  const { data: channelData, mutate } = useListWorkspaceChannel(workspace);
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);
@@ -37,7 +35,7 @@ const AddChannelModal: VFC<Props> = ({ show, onCloseModal }) => {
         setAddSuccess(false);
         try {
           const { data } = await addChannelAPI({ name: formData.channel }, { workspace });
-          const listData = channelData?.length ? channelData.concat(data) : data;
+          const listData = channelData?.length ? channelData.concat(data) : [data];
           mutate(listData, false);
           setAddSuccess(true);
           onCloseModal();

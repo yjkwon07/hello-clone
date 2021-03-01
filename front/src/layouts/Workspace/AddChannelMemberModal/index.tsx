@@ -6,26 +6,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
-import { addWorkSpaceMember as addWorkSpaceMemberAPI, useListworkspaceMember } from '@API/workspaceMember';
+import { addChannelMember as addChannelMemberAPI, useListWorkspaceChannelMember } from '@API/workspaceChannelMember';
 
 type Props = IModal;
 
-const WORKSPACE_MEMBER_SCHEMA = yup.object().shape({
+const CHANNEL_MEMBER_SCHEMA = yup.object().shape({
   email: yup.string().trim().email('올바르지 않은 이메일 양식입니다.').required('이메일은 필수 입력입니다.'),
 });
 
-type FormData = yup.InferType<typeof WORKSPACE_MEMBER_SCHEMA>;
+type FormData = yup.InferType<typeof CHANNEL_MEMBER_SCHEMA>;
 
-const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
-  const { workspace } = useParams<{ workspace: string }>();
-  const { revalidate } = useListworkspaceMember(workspace);
+const AddChannelMemberModal: FC<Props> = ({ show, onCloseModal }) => {
+  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+  const { revalidate } = useListWorkspaceChannelMember(workspace, channel);
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);
 
   const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
     mode: 'onBlur',
-    resolver: yupResolver(WORKSPACE_MEMBER_SCHEMA),
+    resolver: yupResolver(CHANNEL_MEMBER_SCHEMA),
   });
 
   const handleSubmit = useMemo(
@@ -34,7 +34,7 @@ const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
         setAddError('');
         setAddSuccess(false);
         try {
-          await addWorkSpaceMemberAPI({ email: formData.email }, { workspace });
+          await addChannelMemberAPI({ email: formData.email }, { workspace, channel });
           revalidate();
           setAddSuccess(true);
           onCloseModal();
@@ -42,7 +42,7 @@ const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
           setAddError(err.response?.data);
         }
       }),
-    [checkSubmit, onCloseModal, revalidate, workspace],
+    [channel, checkSubmit, onCloseModal, revalidate, workspace],
   );
 
   return (
@@ -50,7 +50,7 @@ const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
       <Modal show={show} onCloseModal={onCloseModal}>
         <form onSubmit={handleSubmit}>
           <Label id="email-label">
-            <span>이메일</span>
+            <span>채널 멤버 초대(이메일)</span>
             <ValidationInput
               inputProps={{ type: 'text', id: 'email', name: 'email', ref: register }}
               errMessage={errors.email?.message}
@@ -71,4 +71,4 @@ const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
   );
 };
 
-export default AddWorkspaceMemberModal;
+export default AddChannelMemberModal;

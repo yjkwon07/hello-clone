@@ -1,48 +1,53 @@
 import React, { useCallback, useState, VFC } from 'react';
-import { Link, Route, Switch, Redirect, useParams } from 'react-router-dom';
+import { Link, Route, Switch, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
-import useSWR from 'swr';
 import { Menu } from '@components/atoms';
+import Header from '@layouts/Workspace/Header';
+import ChannelList from '@layouts/Workspace/ChannelList';
+import DMList from '@layouts/Workspace/DMList';
 import AddChannelModal from '@layouts/Workspace/AddChannelModal';
 import AddWorkSpaceModal from '@layouts/Workspace/AddWorkSpaceModal';
-import Header from '@layouts/Workspace/Header';
+import AddWorkspaceMemberModal from '@layouts/Workspace/AddWorkspaceMemberModal';
 import {
   AddButton,
   Channels,
   Chats,
-  MenuScroll,
+  ChannelScroll,
   WorkspaceButton,
-  WorkspaceModal,
+  WorkspaceMenu,
   WorkspaceName,
   Workspaces,
   WorkspaceWrapper,
 } from '@layouts/Workspace/styles';
-import { logout as logoutAPI } from '@API/user';
-import fetcher from '@utils/fetcher';
-import { GET_CHANNEL_FETCH, USER_FETCH } from '@utils/swrConstants';
+import { logout as logoutAPI, useUser } from '@API/user';
 import { CHANNEL_URL, DM_URL, GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
-import { IChannel, IUser } from '@typings/db';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
 const Workspace: VFC = () => {
-  const { workspace } = useParams<{ workspace: string }>();
-  const { data: userData, mutate } = useSWR<IUser | false>(USER_FETCH, fetcher, { dedupingInterval: 2000 });
-  const { data: channelData } = useSWR<IChannel[]>(userData ? GET_CHANNEL_FETCH(workspace) : null, fetcher, {
-    dedupingInterval: 2000,
-  });
+  const { data: userData, mutate } = useUser();
 
-  const [showAddWorkspaceModal, setShowAddWorkspaceModal] = useState(false);
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
+
+  const [showAddWorkspaceMemberModal, setShowAddWorkspaceMemberModal] = useState(false);
+  const [showAddWorkspaceModal, setShowAddWorkspaceModal] = useState(false);
   const [showAddChannelModal, setShowAddChannelModal] = useState(false);
+
+  const handleToggleWorkspaceMenu = useCallback(() => {
+    setShowWorkspaceMenu((prev) => !prev);
+  }, []);
 
   const handleAddWorkspace = useCallback(() => {
     setShowAddWorkspaceModal(true);
   }, []);
 
-  const handleWorkspaceModal = useCallback(() => {
-    setShowWorkspaceMenu((prev) => !prev);
+  const handleAddWorkspaceMember = useCallback(() => {
+    setShowAddWorkspaceMemberModal(true);
+  }, []);
+
+  const handleAddChannel = useCallback(() => {
+    setShowAddChannelModal(true);
   }, []);
 
   const handleLogout = useCallback(async () => {
@@ -54,13 +59,7 @@ const Workspace: VFC = () => {
     }
   }, [mutate]);
 
-  const onClickAddChannel = useCallback(() => {
-    setShowAddChannelModal(true);
-  }, []);
-
-  if (!userData) {
-    return <Redirect to={LOGIN_URL} />;
-  }
+  if (!userData) return <Redirect to={LOGIN_URL} />;
 
   return (
     <div>
@@ -68,30 +67,32 @@ const Workspace: VFC = () => {
       <WorkspaceWrapper>
         <Workspaces>
           {userData.Workspaces?.map((data) => (
-            <Link key={data.id} to={GET_CHANNEL_URL('123', '일반')}>
+            <Link key={data.id} to={GET_CHANNEL_URL(data.name)}>
               <WorkspaceButton>{data.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
             </Link>
           ))}
           <AddButton onClick={handleAddWorkspace}>+</AddButton>
         </Workspaces>
         <Channels>
-          <WorkspaceName onClick={handleWorkspaceModal}>Sleact</WorkspaceName>
-          <MenuScroll>
-            <Menu show={showWorkspaceMenu} onClose={handleWorkspaceModal} style={{ top: 95, left: 80 }}>
-              <WorkspaceModal>
-                <h2>Sleact</h2>
-                <button type="button" onClick={onClickAddChannel}>
-                  채널 만들기
-                </button>
-                <button type="button" onClick={handleLogout}>
-                  로그아웃
-                </button>
-              </WorkspaceModal>
-            </Menu>
-            {channelData?.map((v) => (
-              <div key={v.id}>{v.name}</div>
-            ))}
-          </MenuScroll>
+          <WorkspaceName onClick={handleToggleWorkspaceMenu}>urSleact</WorkspaceName>
+          <Menu show={showWorkspaceMenu} onClose={handleToggleWorkspaceMenu} style={{ top: 95, left: 80 }}>
+            <WorkspaceMenu>
+              <h2>urSleact</h2>
+              <button type="button" onClick={handleAddWorkspaceMember}>
+                사용자 초대
+              </button>
+              <button type="button" onClick={handleAddChannel}>
+                채널 만들기
+              </button>
+              <button type="button" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </WorkspaceMenu>
+          </Menu>
+          <ChannelScroll>
+            <ChannelList />
+            <DMList />
+          </ChannelScroll>
         </Channels>
         <Chats>
           <Switch>
@@ -102,6 +103,10 @@ const Workspace: VFC = () => {
       </WorkspaceWrapper>
 
       <AddWorkSpaceModal show={showAddWorkspaceModal} onCloseModal={() => setShowAddWorkspaceModal(false)} />
+      <AddWorkspaceMemberModal
+        show={showAddWorkspaceMemberModal}
+        onCloseModal={() => setShowAddWorkspaceMemberModal(false)}
+      />
       <AddChannelModal show={showAddChannelModal} onCloseModal={() => setShowAddChannelModal(false)} />
     </div>
   );

@@ -1,4 +1,5 @@
 export { default as Button } from '@components/atoms/Button';
+export { default as CollapseButton } from '@components/atoms/CollapseButton';
 export { default as Form } from '@components/atoms/Form';
 export { default as Input } from '@components/atoms/Input';
 export { default as Label } from '@components/atoms/Label';

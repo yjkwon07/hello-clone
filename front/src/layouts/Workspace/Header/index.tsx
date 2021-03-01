@@ -1,6 +1,5 @@
 import React, { useCallback, useState, VFC } from 'react';
 import gravatar from 'gravatar';
-import useSWR from 'swr';
 import Menu from '@components/atoms/Menu';
 import {
   Container,
@@ -10,13 +9,10 @@ import {
   ProfileMenu,
   RightMenu,
 } from '@layouts/Workspace/Header/styles';
-import { logout as logoutAPI } from '@API/user';
-import fetcher from '@utils/fetcher';
-import { USER_FETCH } from '@utils/swrConstants';
-import { IUser } from '@typings/db';
+import { logout as logoutAPI, useUser } from '@API/user';
 
 const Header: VFC = () => {
-  const { data: userData, mutate } = useSWR<IUser | false>(USER_FETCH, fetcher);
+  const { data: userData, mutate } = useUser();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleToggleProfileMenu = useCallback(() => {

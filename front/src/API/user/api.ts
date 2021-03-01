@@ -1,28 +1,24 @@
 import { axios } from '@API/client';
 import queryInfoData from '@API/user/queryInfoData';
-
-export interface ISignup {
-  email: string;
-  nickname: string;
-  password: string;
-}
+import { ILogin, ISignup } from '@API/user/type';
+import { IUser } from '@typings/db';
 
 export const signup = (data: ISignup) => {
   const queryData = queryInfoData.signup;
-  return axios.post(queryData.API(), data);
+  return axios.post<IUser>(queryData.API(), data);
 };
-
-export interface ILogin {
-  email: string;
-  password: string;
-}
 
 export const login = (data: ILogin) => {
   const queryData = queryInfoData.login;
-  return axios.post(queryData.API(), data);
+  return axios.post<IUser>(queryData.API(), data);
 };
 
 export const logout = () => {
   const queryData = queryInfoData.logout;
-  return axios.post(queryData.API());
+  return axios.post<string>(queryData.API());
+};
+
+export const readUser = () => {
+  const queryData = queryInfoData.user;
+  return axios.post<string>(queryData.API());
 };

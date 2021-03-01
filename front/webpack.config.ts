@@ -13,7 +13,7 @@ const config: webpack.Configuration = {
   devtool: isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css'], // babel이 처리할 확장자 목록
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.d.ts'], // babel이 처리할 확장자 목록
     alias: {
       // 절대경로, 바벨이 경로를 보고 바꿔주는용. tsconfig는 단지 타이핑 체크 용
       '@assets': path.resolve(__dirname, 'src/assets'),

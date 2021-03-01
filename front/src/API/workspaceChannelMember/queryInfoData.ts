@@ -17,7 +17,7 @@ const queryInfoData = {
    * * 워크스페이스 내부에 채널 멤버 목록 조회 GET
    * * /api/workspaces/{workspace}/channels/{channel}/members
    */
-  listReadChannel: {
+  listReadChannelMember: {
     API(workspace: string, channel: string) {
       return `api/workspaces/${workspace}/channels/${channel}/members`;
     },

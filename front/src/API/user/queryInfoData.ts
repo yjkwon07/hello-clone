@@ -17,7 +17,7 @@ const queryInfoData = {
 
   /**
    * * 로그인 POST
-   * * /api/login
+   * * /api/users/login
    */
   login: {
     API() {
@@ -32,7 +32,7 @@ const queryInfoData = {
 
   /**
    * * 로그아웃 POST
-   * * /api/logout
+   * * /api/users/logout
    */
   logout: {
     API() {
@@ -44,7 +44,7 @@ const queryInfoData = {
 
   /**
    * * 유저 정보 조회 GET
-   * * /api/login
+   * * /api/users
    */
   user: {
     API() {

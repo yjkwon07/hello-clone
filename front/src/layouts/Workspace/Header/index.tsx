@@ -1,5 +1,8 @@
 import React, { useCallback, useState, VFC } from 'react';
+
 import gravatar from 'gravatar';
+
+import { logout as logoutAPI, useUser } from '@API/user';
 import Menu from '@components/atoms/Menu';
 import {
   Container,
@@ -9,7 +12,6 @@ import {
   ProfileMenu,
   RightMenu,
 } from '@layouts/Workspace/Header/styles';
-import { logout as logoutAPI, useUser } from '@API/user';
 
 const Header: VFC = () => {
   const { data: userData, mutate } = useUser();

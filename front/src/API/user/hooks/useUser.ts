@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+
 import queryInfoData from '@API/user/queryInfoData';
 import { IUser } from '@typings/db';
 

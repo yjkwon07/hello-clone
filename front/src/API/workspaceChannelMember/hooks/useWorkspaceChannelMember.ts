@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+
 import queryInfoData from '@API/workspaceChannelMember/queryInfoData';
 import { IUser } from '@typings/db';
 

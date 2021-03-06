@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Container, Header } from '@pages/Channel/styles';
 
 const Channel = () => {

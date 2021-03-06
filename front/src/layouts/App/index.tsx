@@ -1,9 +1,11 @@
 import React from 'react';
+
+import loadable from '@loadable/component';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { SWRConfig } from 'swr';
-import loadable from '@loadable/component';
-import { HOME_URL, LOGIN_URL, SIGNUP_URL, WORKSPACE_URL } from '@utils/url';
+
 import fetcher from '@utils/fetcher';
+import { HOME_URL, LOGIN_URL, SIGNUP_URL, WORKSPACE_URL } from '@utils/url';
 
 const LogIn = loadable(() => import('@pages/LogIn'));
 const SignUp = loadable(() => import('@pages/SignUp'));
@@ -14,7 +16,7 @@ const App = () => {
     <SWRConfig
       value={{
         dedupingInterval: 2000,
-        refreshInterval: 3000,
+        // refreshInterval: 3000,
         fetcher,
       }}
     >

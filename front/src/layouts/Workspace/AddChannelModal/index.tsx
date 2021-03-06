@@ -1,12 +1,14 @@
 import React, { useMemo, useState, VFC } from 'react';
-import { useParams } from 'react-router';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router';
+import * as yup from 'yup';
+
+import { addChannel as addChannelAPI, useListWorkspaceChannel } from '@API/workspaceChannel';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
-import { addChannel as addChannelAPI, useListWorkspaceChannel } from '@API/workspaceChannel';
 
 type Props = IModal;
 

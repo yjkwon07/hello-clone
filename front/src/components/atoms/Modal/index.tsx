@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from 'react';
+
 import { CloseModalButton, Container } from '@components/atoms/Modal/styles';
 
 export interface Props {

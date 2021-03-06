@@ -1,4 +1,5 @@
 import React, { CSSProperties, FC, useCallback } from 'react';
+
 import { CloseModalButton, Container } from '@components/atoms/Menu/styles';
 
 interface Props {

@@ -1,11 +1,13 @@
 import React, { FC, useMemo, useState } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
+
+import { addWorkSpace as addWorkSpaceAPI, useListWorkspace } from '@API/workspace';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
-import { addWorkSpace as addWorkSpaceAPI, useListWorkspace } from '@API/workspace';
 
 type Props = IModal;
 

@@ -1,29 +1,60 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+
+import cls from 'classnames';
 import { NavLink, useParams } from 'react-router-dom';
-import { CollapseButton } from '@components/atoms';
+
 import { useUser } from '@API/user/hooks/useUser';
 import { useListworkspaceMember } from '@API/workspaceMember';
+import { ONLINE_LIST_WS, DM_WS, useWorkSpaceSocket } from '@API/ws';
+import { CollapseButton } from '@components/atoms';
+import { IDM } from '@typings/db';
 import { GET_DM_URL } from '@utils/url';
 
 const DMList: FC = () => {
   const { workspace } = useParams<{ workspace: string }>();
+  const [socket] = useWorkSpaceSocket(workspace);
   const { data: userData } = useUser();
   const { data: memberData } = useListworkspaceMember(workspace);
 
   const [dmCollapse, setDmCollapse] = useState(false);
   const [countList, setCountList] = useState<{ [key: string]: number }>({});
-  const [onlineList] = useState<number[]>([]);
+  const [onlineList, setOnlineList] = useState<number[]>([]);
 
   const toggleDmCollapse = useCallback(() => {
     setDmCollapse((prev) => !prev);
   }, []);
 
-  const resetCount = useCallback(
+  const handleResetCount = useCallback(
     (id) => () => {
       setCountList((list) => ({ ...list, [id]: 0 }));
     },
     [],
   );
+
+  useEffect(() => {
+    setOnlineList([]);
+    setCountList({});
+  }, [workspace]);
+
+  useEffect(() => {
+    const onMessage = (data: IDM) => {
+      console.log('data :>> ', data);
+      setCountList((list) => ({
+        ...list,
+        [data.SenderId]: list[data.SenderId] ? list[data.SenderId] + 1 : 1,
+      }));
+    };
+
+    socket?.on(ONLINE_LIST_WS, (data: number[]) => {
+      setOnlineList(data);
+    });
+    socket?.on(DM_WS, onMessage);
+
+    return () => {
+      socket?.off(ONLINE_LIST_WS);
+      socket?.off(DM_WS, onMessage);
+    };
+  }, [socket]);
 
   return (
     <>
@@ -46,12 +77,16 @@ const DMList: FC = () => {
                 key={member.id}
                 activeClassName="selected"
                 to={GET_DM_URL(workspace, member.id)}
-                onClick={resetCount(member.id)}
+                onClick={handleResetCount(member.id)}
               >
                 <i
-                  className={`c-icon p-channel_sidebar__presence_icon p-channel_sidebar__presence_icon--dim_enabled c-presence ${
-                    isOnline ? 'c-presence--active c-icon--presence-online' : 'c-icon--presence-offline'
-                  }`}
+                  className={cls(
+                    'c-icon p-channel_sidebar__presence_icon p-channel_sidebar__presence_icon--dim_enabled c-presence',
+                    {
+                      'c-presence--active c-icon--presence-online': isOnline,
+                      'c-icon--presence-offline': !isOnline,
+                    },
+                  )}
                   aria-hidden="true"
                 />
                 <span className={count > 0 ? 'bold' : undefined}>{member.nickname}</span>

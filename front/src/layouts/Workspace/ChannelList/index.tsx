@@ -1,7 +1,9 @@
 import React, { FC, useCallback, useState } from 'react';
+
 import { NavLink, useParams } from 'react-router-dom';
-import { CollapseButton } from '@components/atoms';
+
 import { useListWorkspaceChannel } from '@API/workspaceChannel/hooks/useWorkspaceChannel';
+import { CollapseButton } from '@components/atoms';
 import { GET_CHANNEL_URL } from '@utils/url';
 
 const ChannelList: FC = () => {

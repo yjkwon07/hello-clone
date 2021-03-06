@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { Button, Wrapper } from '@components/modals/ConfirmModal/styles';
 

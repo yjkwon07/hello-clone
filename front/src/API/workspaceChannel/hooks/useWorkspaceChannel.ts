@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+
 import queryInfoData from '@API/workspaceChannel/queryInfoData';
 import { IChannel } from '@typings/db';
 

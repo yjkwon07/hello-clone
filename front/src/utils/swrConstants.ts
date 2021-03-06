@@ -1,7 +1,7 @@
 import userInfoData from '@API/user/queryInfoData';
 import channelInfoData from '@API/workspaceChannel/queryInfoData';
-import workspaceMemberInfoData from '@API/workspaceMember/queryInfoData';
 import workspaceChannelMemberInfoData from '@API/workspaceChannelMember/queryInfoData';
+import workspaceMemberInfoData from '@API/workspaceMember/queryInfoData';
 
 export const INIT = undefined;
 

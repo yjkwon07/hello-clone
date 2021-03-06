@@ -1,18 +1,17 @@
 import React, { useMemo, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import useSWR from 'swr';
+import { useForm } from 'react-hook-form';
+import { Link, Redirect } from 'react-router-dom';
+import * as yup from 'yup';
+
+import { login as loginAPI, useUser } from '@API/user';
 import { Button, Label, ValidationInput, Form } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import { LinkContainer, Header } from '@pages/SignUp/styles';
-import { login as loginAPI } from '@API/user';
-import fetcher from '@utils/fetcher';
-import { INIT, USER_FETCH } from '@utils/swrConstants';
 import { GET_CHANNEL_URL, SIGNUP_URL } from '@utils/url';
 
-const LOGIN_SCHEMA = yup.object().shape({
+const LOGIN_SCHEMA = yup.object({
   email: yup.string().email('올바르지 않은 이메일 양식입니다.').required('이메일은 필수 입력입니다.'),
   password: yup.string().required('비밀번호는 필수 입력입니다.'),
 });
@@ -20,7 +19,7 @@ const LOGIN_SCHEMA = yup.object().shape({
 type FormData = yup.InferType<typeof LOGIN_SCHEMA>;
 
 const LogIn = () => {
-  const { data, mutate } = useSWR(USER_FETCH, fetcher);
+  const { data: userData, error, mutate } = useUser();
 
   const [logInError, setLogInError] = useState(false);
 
@@ -43,11 +42,7 @@ const LogIn = () => {
     [checkSubmit, mutate],
   );
 
-  if (data === INIT) {
-    return <div>로딩중...</div>;
-  }
-
-  if (data) {
+  if (!error && userData) {
     return <Redirect to={GET_CHANNEL_URL('sleact', '일반')} />;
   }
 

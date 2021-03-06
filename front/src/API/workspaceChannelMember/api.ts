@@ -1,5 +1,6 @@
 import { axios } from '@API/client';
 import queryInfoData from '@API/workspaceChannelMember/queryInfoData';
+
 import { IAddChannelMember, IAddAddChannelMemberURL, IListReadChannelMemberURL } from './type';
 
 export const addChannelMember = (data: IAddChannelMember, url: IAddAddChannelMemberURL) => {

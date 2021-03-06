@@ -1,13 +1,18 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
-import { Link, Route, Switch, Redirect, useParams } from 'react-router-dom';
+
 import loadable from '@loadable/component';
+import { Link, Route, Switch, Redirect, useParams } from 'react-router-dom';
+
+import { logout as logoutAPI, useUser } from '@API/user';
+import { useListWorkspaceChannel } from '@API/workspaceChannel';
+import { LOGIN_WS, useWorkSpaceSocket } from '@API/ws';
 import { Menu } from '@components/atoms';
-import Header from '@layouts/Workspace/Header';
+import AddChannelModal from '@layouts/Workspace/AddChannelModal';
+import AddWorkspaceMemberModal from '@layouts/Workspace/AddWorkspaceMemberModal';
+import AddWorkSpaceModal from '@layouts/Workspace/AddWorkSpaceModal';
 import ChannelList from '@layouts/Workspace/ChannelList';
 import DMList from '@layouts/Workspace/DMList';
-import AddChannelModal from '@layouts/Workspace/AddChannelModal';
-import AddWorkSpaceModal from '@layouts/Workspace/AddWorkSpaceModal';
-import AddWorkspaceMemberModal from '@layouts/Workspace/AddWorkspaceMemberModal';
+import Header from '@layouts/Workspace/Header';
 import {
   AddButton,
   Channels,
@@ -19,9 +24,6 @@ import {
   Workspaces,
   WorkspaceWrapper,
 } from '@layouts/Workspace/styles';
-import { logout as logoutAPI, useUser } from '@API/user';
-import { useListWorkspaceChannel } from '@API/workspaceChannel';
-import { LOGIN_WS, useWorkSpaceSocket } from '@API/ws';
 import { CHANNEL_URL, DM_URL, GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
 
 const Channel = loadable(() => import('@pages/Channel'));

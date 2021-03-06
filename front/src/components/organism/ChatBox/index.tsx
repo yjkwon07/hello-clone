@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, VFC } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import autosize from 'autosize';
+import cls from 'classnames';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import cls from 'classnames';
-import autosize from 'autosize';
+
 import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox } from '@components/organism/ChatBox/styles';
 
 interface Props {

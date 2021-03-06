@@ -11,6 +11,7 @@ module.exports = {
     'react',
     'react-hooks',
     '@typescript-eslint',
+    'import',
     'prettier',
   ],
   /* extends는 추가한 플러그인에서 사용할 규칙 설정 */
@@ -62,6 +63,26 @@ module.exports = {
         jsx: 'never',
         ts: 'never',
         tsx: 'never',
+      },
+    ],
+    // import order 정의
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
       },
     ],
     'prettier/prettier': 'error',

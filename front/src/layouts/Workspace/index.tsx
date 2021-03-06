@@ -7,12 +7,12 @@ import { logout as logoutAPI, useUser } from '@API/user';
 import { useListWorkspaceChannel } from '@API/workspaceChannel';
 import { LOGIN_WS, useWorkSpaceSocket } from '@API/ws';
 import { Menu } from '@components/atoms';
-import AddChannelModal from '@layouts/Workspace/AddChannelModal';
-import AddWorkspaceMemberModal from '@layouts/Workspace/AddWorkspaceMemberModal';
-import AddWorkSpaceModal from '@layouts/Workspace/AddWorkSpaceModal';
-import ChannelList from '@layouts/Workspace/ChannelList';
-import DMList from '@layouts/Workspace/DMList';
-import Header from '@layouts/Workspace/Header';
+import AddChannelModal from '@layouts/Workspace/modals/AddChannelModal';
+import AddWorkspaceMemberModal from '@layouts/Workspace/modals/AddWorkspaceMemberModal';
+import AddWorkSpaceModal from '@layouts/Workspace/modals/AddWorkSpaceModal';
+import ChannelList from '@layouts/Workspace/organism/ChannelList';
+import DMList from '@layouts/Workspace/organism/DMList';
+import Header from '@layouts/Workspace/organism/Header';
 import {
   AddButton,
   Channels,
@@ -99,7 +99,7 @@ const Workspace: VFC = () => {
             <WorkspaceMenu>
               <h2>urSleact</h2>
               <button type="button" onClick={handleAddWorkspaceMember}>
-                사용자 초대
+                워크스페이스 사용자 초대
               </button>
               <button type="button" onClick={handleAddChannel}>
                 채널 만들기

@@ -6,7 +6,7 @@ import { axiosSetting } from '@API/client';
 
 const sockets: { [key: string]: SocketIOClient.Socket } = {};
 
-const useWorkSpaceSocket = (workspace: string): [SocketIOClient.Socket | undefined, () => void] => {
+const useWorkSpaceSocket = (workspace: string): [SocketIOClient.Socket, () => void] => {
   const disconnect = useCallback(() => {
     sockets[workspace].disconnect();
     delete sockets[workspace];

@@ -1,9 +1,9 @@
 import React, { useCallback, forwardRef, ForwardedRef, RefObject, VFC } from 'react';
 
-import { ChatZone, Section, StickyHeader } from '@components/ChatList/styles';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 import Chat from '@components/organism/ChatList/Chat';
+import { ChatZone, Section, StickyHeader } from '@components/organism/ChatList/styles';
 import { IDM } from '@typings/db';
 
 interface Props {

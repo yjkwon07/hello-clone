@@ -1,5 +1,5 @@
-import React, { useCallback, useState, VFC } from 'react';
-import { Link, Route, Switch, Redirect } from 'react-router-dom';
+import React, { useCallback, useEffect, useState, VFC } from 'react';
+import { Link, Route, Switch, Redirect, useParams } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { Menu } from '@components/atoms';
 import Header from '@layouts/Workspace/Header';
@@ -20,16 +20,20 @@ import {
   WorkspaceWrapper,
 } from '@layouts/Workspace/styles';
 import { logout as logoutAPI, useUser } from '@API/user';
+import { useListWorkspaceChannel } from '@API/workspaceChannel';
+import { LOGIN_WS, useWorkSpaceSocket } from '@API/ws';
 import { CHANNEL_URL, DM_URL, GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
 const Workspace: VFC = () => {
+  const { workspace } = useParams<{ workspace: string }>();
+  const [socket, disconnect] = useWorkSpaceSocket(workspace);
   const { data: userData, mutate } = useUser();
+  const { data: channelData } = useListWorkspaceChannel(workspace);
 
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
-
   const [showAddWorkspaceMemberModal, setShowAddWorkspaceMemberModal] = useState(false);
   const [showAddWorkspaceModal, setShowAddWorkspaceModal] = useState(false);
   const [showAddChannelModal, setShowAddChannelModal] = useState(false);
@@ -59,7 +63,21 @@ const Workspace: VFC = () => {
     }
   }, [mutate]);
 
-  if (!userData) return <Redirect to={LOGIN_URL} />;
+  useEffect(() => {
+    if (channelData && userData && socket) {
+      socket.emit(LOGIN_WS, { id: userData.id, channels: channelData.map((v) => v.id) });
+    }
+  }, [socket, channelData, userData]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, [workspace, disconnect]);
+
+  if (!userData) {
+    return <Redirect to={LOGIN_URL} />;
+  }
 
   return (
     <div>

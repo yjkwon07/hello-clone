@@ -1,76 +1,95 @@
 import React, { useCallback, useEffect, useMemo, useRef, VFC } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import autosize from 'autosize';
 import cls from 'classnames';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import gravatar from 'gravatar';
+import { Mention, SuggestionDataItem } from 'react-mentions';
+import { useParams } from 'react-router-dom';
 
-import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox } from '@components/organism/ChatBox/styles';
+import { useListworkspaceMember } from '@API/workspaceMember';
+
+import { ChatArea, EachMention, Form, MentionsTextarea, SendButton, Toolbox } from './styles';
 
 interface Props {
-  chat?: string;
+  chat: string;
   placeholder?: string;
-  onSubmitForm: (data: FormData) => void;
+  onChangeChat: (e: any) => void;
+  onSubmitForm: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const CHAT_SCHEMA = yup.object({
-  chat: yup.string().trim().required(),
-});
+const ChatBox: VFC<Props> = ({ chat, placeholder, onChangeChat, onSubmitForm }) => {
+  const { workspace } = useParams<{ workspace: string }>();
+  const { data: memberData } = useListworkspaceMember({ workspace });
 
-type FormData = yup.InferType<typeof CHAT_SCHEMA>;
-
-const ChatBox: VFC<Props> = ({ chat, onSubmitForm, placeholder }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const { register, handleSubmit: checkSubmit, formState } = useForm<FormData>({
-    mode: 'onChange',
-    defaultValues: { chat },
-    resolver: yupResolver(CHAT_SCHEMA),
-  });
 
   useEffect(() => {
     if (textareaRef.current) autosize(textareaRef.current);
   }, []);
-
-  const handleSubmit = useMemo(() => checkSubmit(onSubmitForm), [checkSubmit, onSubmitForm]);
 
   const handleKeydownChat = useCallback(
     (e) => {
       if (e.key === 'Enter') {
         if (!e.shiftKey) {
           e.preventDefault();
-          handleSubmit(e);
+          onSubmitForm(e);
         }
       }
     },
-    [handleSubmit],
+    [onSubmitForm],
+  );
+
+  const mentionData = useMemo(() => {
+    return memberData?.map((v) => ({ id: v.id, display: v.nickname })) || [];
+  }, [memberData]);
+
+  const renderSuggestion = useCallback(
+    (
+      _suggestion: SuggestionDataItem,
+      _search: string,
+      highlightedDisplay: React.ReactNode,
+      index: number,
+      focus: boolean,
+    ): React.ReactNode | null => {
+      if (!memberData) return null;
+      return (
+        <EachMention focus={focus}>
+          <img
+            src={gravatar.url(memberData[index].email, { s: '20px', d: 'retro' })}
+            alt={memberData[index].nickname}
+          />
+          <span>{highlightedDisplay}</span>
+        </EachMention>
+      );
+    },
+    [memberData],
   );
 
   return (
     <ChatArea>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={onSubmitForm}>
         <MentionsTextarea
           id="editor-chat"
-          name="chat"
+          value={chat}
+          onChange={onChangeChat}
           onKeyPress={handleKeydownChat}
           placeholder={placeholder}
-          ref={(e) => {
-            register(e);
-            textareaRef.current = e;
-          }}
-        />
+          inputRef={textareaRef}
+          allowSuggestionsAboveCursor
+        >
+          <Mention appendSpaceOnAdd trigger="@" data={mentionData} renderSuggestion={renderSuggestion} />
+        </MentionsTextarea>
         <Toolbox>
           <SendButton
             className={cls(
               'c-button-unstyled c-icon_button c-icon_button--light c-icon_button--size_medium c-texty_input__button c-texty_input__button--send',
               {
-                'c-texty_input__button--disabled': !formState.isValid,
+                'c-texty_input__button--disabled': !chat.trim(),
               },
             )}
             aria-label="Send message"
             type="submit"
-            disabled={!formState.isValid}
+            disabled={!chat.trim()}
           >
             <i className="c-icon c-icon--paperplane-filled" aria-hidden="true" />
           </SendButton>

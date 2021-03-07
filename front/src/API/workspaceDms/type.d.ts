@@ -1,5 +1,5 @@
 export interface IAddWorkSpaceDms {
-  cotent: string;
+  content: string;
 }
 export interface IAddWorkSpaceDmsURL {
   workspace: string;

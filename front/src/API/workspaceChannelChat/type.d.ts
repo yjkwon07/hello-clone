@@ -11,6 +11,6 @@ export interface IListWorkSpaceChannelChatURL {
   channel: string;
 }
 export interface IListWorkSpaceChannelChatHeaderQuery {
-  perPage: number;
-  page: number;
+  perPage?: number;
+  page?: number;
 }

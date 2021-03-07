@@ -3,11 +3,11 @@ import { IAddWorkSpaceDmsURL, IListReadWorkSpaceDmsURL, IListReadWorkSpaceDmsHea
 /**
  * * :workspace 내부의 :mberId와 나눈 dm을 저장 POST
  * * dm 소켓 이벤트가 emit됨
- * * api/workspaces/{workspace}/dms/{mberId}/chat
+ * * api/workspaces/{workspace}/dms/{mberId}/chats
  * * return: 'ok'
  */
 export function addWorkSpaceDmsAPI(url: IAddWorkSpaceDmsURL) {
-  return `api/workspaces/${url.workspace}/dms/${url.mberId}/chat`;
+  return `api/workspaces/${url.workspace}/dms/${url.mberId}/chats`;
 }
 
 /**

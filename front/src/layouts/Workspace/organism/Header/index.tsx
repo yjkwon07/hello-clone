@@ -35,12 +35,12 @@ const Header: VFC = () => {
         {userData && (
           <>
             <ImgButton onClick={handleToggleProfileMenu}>
-              <ProfileImg src={gravatar.url(userData.nickname, { s: '28px', d: 'retro' })} alt={userData.nickname} />
+              <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
             </ImgButton>
             {showProfileMenu && (
               <Menu style={{ right: 0, top: 38 }} show={showProfileMenu} onClose={handleCloseProfileMenu}>
                 <ProfileMenu>
-                  <img src={gravatar.url(userData.nickname, { s: '36px', d: 'retro' })} alt={userData.nickname} />
+                  <img src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
                   <div>
                     <span id="profile-name">{userData.nickname}</span>
                     <span id="profile-active">Active</span>

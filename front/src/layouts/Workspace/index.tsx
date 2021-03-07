@@ -33,7 +33,7 @@ const Workspace: VFC = () => {
   const { workspace } = useParams<{ workspace: string }>();
   const [socket, disconnect] = useWorkSpaceSocket(workspace);
   const { data: userData, mutate } = useUser();
-  const { data: channelData } = useListWorkspaceChannel(workspace);
+  const { data: channelData } = useListWorkspaceChannel({ workspace });
 
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
   const [showAddWorkspaceMemberModal, setShowAddWorkspaceMemberModal] = useState(false);

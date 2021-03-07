@@ -1,4 +1,4 @@
 export * from './hooks/useWorkspaceMember';
 export * from './api';
-export * from './requestAPI';
+export * from './reuqestAPI';
 export * from './type';

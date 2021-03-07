@@ -8,7 +8,7 @@ import { GET_CHANNEL_URL } from '@utils/url';
 
 const ChannelList: FC = () => {
   const { workspace } = useParams<{ workspace: string }>();
-  const { data: channelData } = useListWorkspaceChannel(workspace);
+  const { data: channelData } = useListWorkspaceChannel({ workspace });
 
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [countList, setCountList] = useState<{ [key: string]: number }>({});

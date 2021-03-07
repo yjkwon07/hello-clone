@@ -14,7 +14,7 @@ const DMList: FC = () => {
   const { workspace } = useParams<{ workspace: string }>();
   const [socket] = useWorkSpaceSocket(workspace);
   const { data: userData } = useUser();
-  const { data: memberData } = useListworkspaceMember(workspace);
+  const { data: memberData } = useListworkspaceMember({ workspace });
 
   const [dmCollapse, setDmCollapse] = useState(false);
   const [countList, setCountList] = useState<{ [key: string]: number }>({});

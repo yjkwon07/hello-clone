@@ -1,12 +1,14 @@
 import useSWR from 'swr';
 
-import queryInfoData from '@API/workspaceChannel/queryInfoData';
+import { listReadChannelAPI, readChannelAPI } from '@API/workspaceChannel/requestAPI';
 import { IChannel } from '@typings/db';
 
-export function useListWorkspaceChannel(workspace: string) {
-  return useSWR<IChannel[]>(queryInfoData.listReadChannel.API(workspace));
+import { IAddCWorkspaceChannelURL, IReadWorkspaceChannelURL } from '../type';
+
+export function useWorkspaceChannel(url: IReadWorkspaceChannelURL) {
+  return useSWR<IChannel>(readChannelAPI(url));
 }
 
-export function useWorkspaceChannel(workspace: string, channel: string) {
-  return useSWR<IChannel>(queryInfoData.readChannel.API(workspace, channel));
+export function useListWorkspaceChannel(url: IAddCWorkspaceChannelURL) {
+  return useSWR<IChannel[]>(listReadChannelAPI(url));
 }

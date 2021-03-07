@@ -20,7 +20,7 @@ type FormData = yup.InferType<typeof WORKSPACE_MEMBER_SCHEMA>;
 
 const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
-  const { revalidate } = useListworkspaceMember(workspace);
+  const { revalidate } = useListworkspaceMember({ workspace });
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);

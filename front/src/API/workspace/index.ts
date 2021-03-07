@@ -1,4 +1,4 @@
-export * from '@API/workspace/hooks/useWorkspace';
-export * from '@API/workspace/api';
-export { default as queryInfoData } from '@API/workspace/queryInfoData';
-export * from '@API/workspace/type';
+export * from './hooks/useWorkspace';
+export * from './api';
+export * from './requestAPI';
+export * from './type';

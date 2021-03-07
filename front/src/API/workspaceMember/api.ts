@@ -1,23 +1,31 @@
 import { axios } from '@API/client';
-import queryInfoData from '@API/workspaceMember/queryInfoData';
+
 import {
-  IAddWorkSpaceMember,
+  addWorkSpaceMemberAPI,
+  listReadWorkSpaceMemberAPI,
+  readWorkSpaceMemberAPI,
+  removeWorkspaceMemberAPI,
+} from './requestAPI';
+import {
+  IAddWorkSpaceMemberBodyQuery,
   IAddWorkSpaceMemberURL,
   IListReadWorkSpaceMemberURL,
+  IReadWorkSpaceMemberURL,
   IRemoveWorkSpaceMemberURL,
-} from '@API/workspaceMember/type';
+} from './type';
 
-export const addWorkSpaceMember = (data: IAddWorkSpaceMember, url: IAddWorkSpaceMemberURL) => {
-  const queryData = queryInfoData.addWorkSpaceMember;
-  return axios.post(queryData.API(url.workspace), data);
+export const addWorkSpaceMember = (data: IAddWorkSpaceMemberBodyQuery, url: IAddWorkSpaceMemberURL) => {
+  return axios.post(addWorkSpaceMemberAPI(url), data);
 };
 
 export const listReadWorkSpaceMember = (url: IListReadWorkSpaceMemberURL) => {
-  const queryData = queryInfoData.listReadWorkSpaceMember;
-  return axios.post(queryData.API(url.workspace));
+  return axios.post(listReadWorkSpaceMemberAPI(url));
+};
+
+export const readWorkSpaceMember = (url: IReadWorkSpaceMemberURL) => {
+  return axios.post(readWorkSpaceMemberAPI(url));
 };
 
 export const removeWorkspaceMember = (url: IRemoveWorkSpaceMemberURL) => {
-  const queryData = queryInfoData.removeWorkspaceMember;
-  return axios.post(queryData.API(url.workspace, url.mberId));
+  return axios.post(removeWorkspaceMemberAPI(url));
 };

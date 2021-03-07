@@ -1,7 +1,6 @@
-export interface IAddChannelMember {
+export interface IAddChannelMemberBodyQuery {
   email: string;
 }
-
 export interface IAddAddChannelMemberURL {
   workspace: string;
   channel: string;

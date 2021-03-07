@@ -4,14 +4,8 @@ import gravatar from 'gravatar';
 
 import { logout as logoutAPI, useUser } from '@API/user';
 import Menu from '@components/atoms/Menu';
-import {
-  Container,
-  ImgButton,
-  LogOutButton,
-  ProfileImg,
-  ProfileMenu,
-  RightMenu,
-} from '@layouts/Workspace/Header/styles';
+
+import { Container, ImgButton, LogOutButton, ProfileImg, ProfileMenu, RightMenu } from './styles';
 
 const Header: VFC = () => {
   const { data: userData, mutate } = useUser();

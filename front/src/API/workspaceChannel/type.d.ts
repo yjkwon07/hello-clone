@@ -1,4 +1,4 @@
-export interface IAddWorkspaceChannel {
+export interface IAddWorkspaceChannelBodyQuery {
   name: string;
 }
 

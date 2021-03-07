@@ -1,10 +1,10 @@
-export interface ISignup {
+export interface ISignupBodyQuery {
   email: string;
   nickname: string;
   password: string;
 }
 
-export interface ILogin {
+export interface ILoginBodyQuery {
   email: string;
   password: string;
 }

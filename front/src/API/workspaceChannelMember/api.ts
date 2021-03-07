@@ -1,14 +1,12 @@
 import { axios } from '@API/client';
-import queryInfoData from '@API/workspaceChannelMember/queryInfoData';
 
-import { IAddChannelMember, IAddAddChannelMemberURL, IListReadChannelMemberURL } from './type';
+import { addChannelMemberAPI, listReadChannelMemberAPI } from './requestAPI';
+import { IAddChannelMemberBodyQuery, IAddAddChannelMemberURL, IListReadChannelMemberURL } from './type';
 
-export const addChannelMember = (data: IAddChannelMember, url: IAddAddChannelMemberURL) => {
-  const queryData = queryInfoData.addChannelMember;
-  return axios.post(queryData.API(url.workspace, url.channel), data);
+export const addChannelMember = (data: IAddChannelMemberBodyQuery, url: IAddAddChannelMemberURL) => {
+  return axios.post(addChannelMemberAPI(url), data);
 };
 
 export const listReadChannelMember = (url: IListReadChannelMemberURL) => {
-  const queryData = queryInfoData.listReadChannelMember;
-  return axios.get(queryData.API(url.workspace, url.channel));
+  return axios.get(listReadChannelMemberAPI(url));
 };

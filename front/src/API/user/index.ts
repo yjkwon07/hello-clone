@@ -1,4 +1,4 @@
-export * from '@API/user/hooks/useUser';
-export * from '@API/user/api';
-export { default as queryInfoData } from '@API/user/queryInfoData';
-export * from '@API/user/type';
+export * from './hooks/useUser';
+export * from './api';
+export * from './requestAPI';
+export * from './type';

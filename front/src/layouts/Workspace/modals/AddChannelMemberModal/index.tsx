@@ -20,7 +20,7 @@ type FormData = yup.InferType<typeof CHANNEL_MEMBER_SCHEMA>;
 
 const AddChannelMemberModal: FC<Props> = ({ show, onCloseModal }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
-  const { revalidate } = useListWorkspaceChannelMember(workspace, channel);
+  const { revalidate } = useListWorkspaceChannelMember({ workspace, channel });
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);

@@ -1,24 +1,20 @@
 import { axios } from '@API/client';
-import queryInfoData from '@API/user/queryInfoData';
-import { ILogin, ISignup } from '@API/user/type';
+import { loginAPI, logoutAPI, signupAPI, userAPI } from '@API/user/requestAPI';
+import { ILoginBodyQuery, ISignupBodyQuery } from '@API/user/type';
 import { IUser } from '@typings/db';
 
-export const signup = (data: ISignup) => {
-  const queryData = queryInfoData.signup;
-  return axios.post<IUser>(queryData.API(), data);
+export const signup = (data: ISignupBodyQuery) => {
+  return axios.post<IUser>(signupAPI(), data);
 };
 
-export const login = (data: ILogin) => {
-  const queryData = queryInfoData.login;
-  return axios.post<IUser>(queryData.API(), data);
+export const login = (data: ILoginBodyQuery) => {
+  return axios.post<IUser>(loginAPI(), data);
 };
 
 export const logout = () => {
-  const queryData = queryInfoData.logout;
-  return axios.post<string>(queryData.API());
+  return axios.post<string>(logoutAPI());
 };
 
 export const readUser = () => {
-  const queryData = queryInfoData.user;
-  return axios.post<string>(queryData.API());
+  return axios.post<string>(userAPI());
 };

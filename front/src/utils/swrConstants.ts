@@ -1,11 +1,11 @@
-import userInfoData from '@API/user/queryInfoData';
-import channelInfoData from '@API/workspaceChannel/queryInfoData';
-import workspaceChannelMemberInfoData from '@API/workspaceChannelMember/queryInfoData';
-import workspaceMemberInfoData from '@API/workspaceMember/queryInfoData';
+import { userAPI } from '@API/user/requestAPI';
+import { listReadChannelAPI } from '@API/workspaceChannel/requestAPI';
+import { listReadChannelMemberAPI } from '@API/workspaceChannelMember/requestAPI';
+import { listReadWorkSpaceMemberAPI } from '@API/workspaceMember/requestAPI';
 
 export const INIT = undefined;
 
-export const USER_FETCH = userInfoData.user.API();
-export const GET_LIST_CHANNEL_FETCH = channelInfoData.listReadChannel.API;
-export const GET_LIST_WORKSPACE_MEMBER_FETCH = workspaceMemberInfoData.listReadWorkSpaceMember.API;
-export const GET_LIST_WORKSPACE_CHANNEL_MEMBER_FETCH = workspaceChannelMemberInfoData.listReadChannelMember.API;
+export const USER_FETCH = userAPI();
+export const GET_LIST_CHANNEL_FETCH = listReadChannelAPI;
+export const GET_LIST_WORKSPACE_MEMBER_FETCH = listReadWorkSpaceMemberAPI;
+export const GET_LIST_WORKSPACE_CHANNEL_MEMBER_FETCH = listReadChannelMemberAPI;

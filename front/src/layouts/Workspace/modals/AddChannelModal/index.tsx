@@ -20,7 +20,7 @@ type FormData = yup.InferType<typeof CHANNEL_SCHEMA>;
 
 const AddChannelModal: VFC<Props> = ({ show, onCloseModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
-  const { data: channelData, mutate } = useListWorkspaceChannel(workspace);
+  const { data: channelData, mutate } = useListWorkspaceChannel({ workspace });
 
   const [addError, setAddError] = useState('');
   const [addSuccess, setAddSuccess] = useState(false);

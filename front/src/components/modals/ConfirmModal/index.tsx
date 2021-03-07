@@ -16,8 +16,8 @@ const ConfirmModal: FC<Props> = ({
   show,
   title,
   description,
-  confirmText,
-  cancelText,
+  confirmText = '확인',
+  cancelText = '취소',
   onCloseModal,
   onConfirm,
   onCancel,
@@ -34,11 +34,6 @@ const ConfirmModal: FC<Props> = ({
       </Wrapper>
     </Modal>
   );
-};
-
-ConfirmModal.defaultProps = {
-  confirmText: '확인',
-  cancelText: '취소',
 };
 
 export default ConfirmModal;

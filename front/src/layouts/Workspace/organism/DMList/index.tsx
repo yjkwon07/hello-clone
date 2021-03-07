@@ -37,22 +37,19 @@ const DMList: FC = () => {
   }, [workspace]);
 
   useEffect(() => {
-    const onMessage = (data: IDM) => {
-      console.log('data :>> ', data);
+    socket.on(ONLINE_LIST_WS, (data: number[]) => {
+      setOnlineList(data);
+    });
+    socket.on(DM_WS, (data: IDM) => {
       setCountList((list) => ({
         ...list,
         [data.SenderId]: list[data.SenderId] ? list[data.SenderId] + 1 : 1,
       }));
-    };
-
-    socket?.on(ONLINE_LIST_WS, (data: number[]) => {
-      setOnlineList(data);
     });
-    socket?.on(DM_WS, onMessage);
 
     return () => {
-      socket?.off(ONLINE_LIST_WS);
-      socket?.off(DM_WS, onMessage);
+      socket.off(ONLINE_LIST_WS);
+      socket.off(DM_WS);
     };
   }, [socket]);
 
@@ -89,7 +86,7 @@ const DMList: FC = () => {
                   )}
                   aria-hidden="true"
                 />
-                <span className={count > 0 ? 'bold' : undefined}>{member.nickname}</span>
+                <span className={cls({ bold: count })}>{member.nickname}</span>
                 {userData && member.id === userData.id && <span> (나)</span>}
                 {count > 0 && <span className="count">{count}</span>}
               </NavLink>

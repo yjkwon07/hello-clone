@@ -9,7 +9,7 @@ interface Props {
   closeButton?: boolean;
 }
 
-const Menu: FC<Props> = ({ children, style, show, onClose, closeButton }) => {
+const Menu: FC<Props> = ({ children, style, show, onClose, closeButton = true }) => {
   const stopPropagation = useCallback((e: React.SyntheticEvent) => {
     e.stopPropagation();
   }, []);
@@ -24,10 +24,6 @@ const Menu: FC<Props> = ({ children, style, show, onClose, closeButton }) => {
       </div>
     </Container>
   );
-};
-
-Menu.defaultProps = {
-  closeButton: true,
 };
 
 export default Menu;

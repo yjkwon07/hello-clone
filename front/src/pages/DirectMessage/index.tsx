@@ -5,7 +5,7 @@ import Scrollbars from 'react-custom-scrollbars';
 import { useParams } from 'react-router-dom';
 
 import { useUser } from '@API/user';
-import { addWorkSpaceDms, useInfiniteListWorkspaceDms } from '@API/workspaceDms';
+import { addWorkSpaceDmsChat, useInfiniteListWorkspaceDmsChat } from '@API/workspaceDmsChat';
 import { useWorkspaceMember } from '@API/workspaceMember';
 import { useWorkSpaceSocket } from '@API/ws';
 import { ChatBox } from '@components/organism';
@@ -26,7 +26,7 @@ const DirectMessage = () => {
   const [socket] = useWorkSpaceSocket(workspace);
   const { data: userData } = useWorkspaceMember({ workspace, mberId });
   const { data: myData } = useUser();
-  const { data: chatData, mutate: mutateChat, revalidate, setSize } = useInfiniteListWorkspaceDms(
+  const { data: chatData, mutate: mutateChat, revalidate, setSize } = useInfiniteListWorkspaceDmsChat(
     {
       workspace,
       mberId,
@@ -58,7 +58,7 @@ const DirectMessage = () => {
           }, false);
           setChat('');
           scrollbarRef.current?.scrollToBottom();
-          await addWorkSpaceDms({ content: chat }, { workspace, mberId });
+          await addWorkSpaceDmsChat({ content: chat }, { workspace, mberId });
           revalidate();
         }
       } catch (error) {

@@ -1,4 +1,4 @@
-import { IAddWorkSpaceDmsURL, IListReadWorkSpaceDmsURL, IListReadWorkSpaceDmsHeaderQuery } from './type';
+import { IAddWorkSpaceDmsChatURL, IListReadWorkSpaceDmsChatURL, IListReadWorkSpaceDmsChatHeaderQuery } from './type';
 
 /**
  * * :workspace 내부의 :mberId와 나눈 dm을 저장 POST
@@ -6,7 +6,7 @@ import { IAddWorkSpaceDmsURL, IListReadWorkSpaceDmsURL, IListReadWorkSpaceDmsHea
  * * api/workspaces/{workspace}/dms/{mberId}/chats
  * * return: 'ok'
  */
-export function addWorkSpaceDmsAPI(url: IAddWorkSpaceDmsURL) {
+export function addWorkSpaceDmsChatAPI(url: IAddWorkSpaceDmsChatURL) {
   return `api/workspaces/${url.workspace}/dms/${url.mberId}/chats`;
 }
 
@@ -15,6 +15,9 @@ export function addWorkSpaceDmsAPI(url: IAddWorkSpaceDmsURL) {
  * * /workspaces/:workspace/dms/:id/chats?perPage={perPage}&page={page}
  * * return: IDM[]
  */
-export function listReadWorkSpaceDmsAPI(url: IListReadWorkSpaceDmsURL, query: IListReadWorkSpaceDmsHeaderQuery) {
+export function listReadWorkSpaceDmsChatAPI(
+  url: IListReadWorkSpaceDmsChatURL,
+  query: IListReadWorkSpaceDmsChatHeaderQuery,
+) {
   return `api/workspaces/${url.workspace}/dms/${url.mberId}/chats?perPage=${query.perPage}&page=${query.page}`;
 }

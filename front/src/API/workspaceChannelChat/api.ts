@@ -8,11 +8,11 @@ import {
   IListWorkSpaceChannelChatURL,
 } from './type';
 
-export const addWorkSpaceMember = (data: IAddWorkSpaceChannelChatBodyQuery, url: IAddWorkSpaceChannelChatURL) => {
+export const addWorkSpaceChannelChat = (data: IAddWorkSpaceChannelChatBodyQuery, url: IAddWorkSpaceChannelChatURL) => {
   return axios.post(addWorkSpaceChannelChatAPI(url), data);
 };
 
-export const listReadWorkSpaceMember = (
+export const listReadWorkSpaceChannelChat = (
   url: IListWorkSpaceChannelChatURL,
   query: IListWorkSpaceChannelChatHeaderQuery,
 ) => {

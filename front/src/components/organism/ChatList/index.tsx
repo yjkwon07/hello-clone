@@ -9,7 +9,7 @@ import { ChatZone, Section, StickyHeader } from './styles';
 
 interface Props {
   chatSections: { [key: string]: (IDM | IChat)[] };
-  setSize: (f: (size: number) => number) => Promise<IDM[][] | undefined>;
+  setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>;
   isReachingEndData: boolean;
   scrollRef: RefObject<Scrollbars>;
 }

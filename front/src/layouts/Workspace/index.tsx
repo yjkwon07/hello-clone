@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState, VFC } from 'react';
 import loadable from '@loadable/component';
 import { Link, Route, Switch, Redirect, useParams } from 'react-router-dom';
 
-import { logout as logoutAPI, useUser } from '@API/user';
+import { requestLogout, useUser } from '@API/user';
 import { useListWorkspaceChannel } from '@API/workspaceChannel';
 import { LOGIN_WS, useWorkSpaceSocket } from '@API/ws';
 import { Menu } from '@components/atoms';
@@ -12,7 +12,9 @@ import AddWorkspaceMemberModal from '@layouts/Workspace/modals/AddWorkspaceMembe
 import AddWorkSpaceModal from '@layouts/Workspace/modals/AddWorkSpaceModal';
 import ChannelList from '@layouts/Workspace/organism/ChannelList';
 import DMList from '@layouts/Workspace/organism/DMList';
-import Header from '@layouts/Workspace/organism/Header';
+import { CHANNEL_URL, DM_URL, GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
+
+import Header from './organism/Header';
 import {
   AddButton,
   Channels,
@@ -23,8 +25,7 @@ import {
   WorkspaceName,
   Workspaces,
   WorkspaceWrapper,
-} from '@layouts/Workspace/styles';
-import { CHANNEL_URL, DM_URL, GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
+} from './styles';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
@@ -48,17 +49,29 @@ const Workspace: VFC = () => {
     setShowAddWorkspaceModal(true);
   }, []);
 
+  const handleCancleAddWorkspace = useCallback(() => {
+    setShowAddWorkspaceModal(false);
+  }, []);
+
   const handleAddWorkspaceMember = useCallback(() => {
     setShowAddWorkspaceMemberModal(true);
+  }, []);
+
+  const handleCancleAddWorkspaceMember = useCallback(() => {
+    setShowAddWorkspaceMemberModal(false);
   }, []);
 
   const handleAddChannel = useCallback(() => {
     setShowAddChannelModal(true);
   }, []);
 
+  const handleCancleAddChannel = useCallback(() => {
+    setShowAddChannelModal(false);
+  }, []);
+
   const handleLogout = useCallback(async () => {
     try {
-      await logoutAPI();
+      await requestLogout();
       mutate(false, false);
     } catch (err) {
       console.dir('err :>> ', err);
@@ -82,7 +95,7 @@ const Workspace: VFC = () => {
   }
 
   return (
-    <div>
+    <>
       <Header />
       <WorkspaceWrapper>
         <Workspaces>
@@ -94,10 +107,10 @@ const Workspace: VFC = () => {
           <AddButton onClick={handleAddWorkspace}>+</AddButton>
         </Workspaces>
         <Channels>
-          <WorkspaceName onClick={handleToggleWorkspaceMenu}>urSleact</WorkspaceName>
+          <WorkspaceName onClick={handleToggleWorkspaceMenu}>urTalk</WorkspaceName>
           <Menu show={showWorkspaceMenu} onClose={handleToggleWorkspaceMenu} style={{ top: 95, left: 80 }}>
             <WorkspaceMenu>
-              <h2>urSleact</h2>
+              <h2>urTalk</h2>
               <button type="button" onClick={handleAddWorkspaceMember}>
                 워크스페이스 사용자 초대
               </button>
@@ -122,13 +135,10 @@ const Workspace: VFC = () => {
         </Chats>
       </WorkspaceWrapper>
 
-      <AddWorkSpaceModal show={showAddWorkspaceModal} onCloseModal={() => setShowAddWorkspaceModal(false)} />
-      <AddWorkspaceMemberModal
-        show={showAddWorkspaceMemberModal}
-        onCloseModal={() => setShowAddWorkspaceMemberModal(false)}
-      />
-      <AddChannelModal show={showAddChannelModal} onCloseModal={() => setShowAddChannelModal(false)} />
-    </div>
+      <AddWorkSpaceModal show={showAddWorkspaceModal} onCloseModal={handleCancleAddWorkspace} />
+      <AddWorkspaceMemberModal show={showAddWorkspaceMemberModal} onCloseModal={handleCancleAddWorkspaceMember} />
+      <AddChannelModal show={showAddChannelModal} onCloseModal={handleCancleAddChannel} />
+    </>
   );
 };
 

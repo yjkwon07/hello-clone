@@ -1,14 +1,10 @@
 import useSWR from 'swr';
 
-import { IUser, IUserWithOnline } from '@typings/db';
+import { IUser } from '@typings/db';
 
-import { listReadWorkSpaceMemberAPI, readWorkSpaceMemberAPI } from '../requestAPI';
-import { IListReadWorkSpaceMemberURL, IReadWorkSpaceMemberURL } from '../type';
+import { GET_READ_WORKSPACE_MEMBER_API } from '../api';
+import { IReadWorkSpaceMemberURL } from '../type';
 
-export function useWorkspaceMember(url: IReadWorkSpaceMemberURL) {
-  return useSWR<IUser>(readWorkSpaceMemberAPI(url));
-}
-
-export function useListworkspaceMember(url: IListReadWorkSpaceMemberURL) {
-  return useSWR<IUserWithOnline[]>(listReadWorkSpaceMemberAPI(url));
+export default function useWorkspaceMember(url: IReadWorkSpaceMemberURL) {
+  return useSWR<IUser>(GET_READ_WORKSPACE_MEMBER_API(url));
 }

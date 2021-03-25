@@ -1,11 +1,10 @@
 import useSWR from 'swr';
 
-import { listReadChannelMemberAPI } from '@API/workspaceChannelMember/requestAPI';
+import { GET_LIST_READ_CHANNEL_MEMBER_API } from '@API/workspaceChannelMember/api';
 import { IUser } from '@typings/db';
 
 import { IListReadChannelMemberURL } from '../type';
 
-// eslint-disable-next-line import/prefer-default-export
-export function useListWorkspaceChannelMember(url: IListReadChannelMemberURL) {
-  return useSWR<IUser[]>(listReadChannelMemberAPI(url));
+export default function useListWorkspaceChannelMember(url: IListReadChannelMemberURL) {
+  return useSWR<IUser[]>(GET_LIST_READ_CHANNEL_MEMBER_API(url));
 }

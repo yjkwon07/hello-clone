@@ -1,12 +1,17 @@
-import { axios } from '@API/client';
-import { addWorkSpaceAPI, listReadWorkSpaceAPI } from '@API/workspace/requestAPI';
-import { IAddWorkSpaceBodyQuery } from '@API/workspace/type';
-import { IWorkspace } from '@typings/db';
+/**
+ * * 워크스페이스를 생성함 POST
+ * * /api/workspaces
+ * * return: IWorkspace
+ */
+export function GET_ADD_WORKSPACE_API() {
+  return '/api/workspaces';
+}
 
-export const addWorkSpace = (data: IAddWorkSpaceBodyQuery) => {
-  return axios.post<IWorkspace>(addWorkSpaceAPI(), data);
-};
-
-export const listReadWorkSpace = () => {
-  return axios.post<IWorkspace[]>(listReadWorkSpaceAPI());
-};
+/**
+ * * 내 워크스페이스 목록을 가져옴 GET
+ * * /api/workspaces
+ * * return: IWorkspace[]
+ */
+export function GET_LIST_READ_WORKSPACE_API() {
+  return '/api/workspaces';
+}

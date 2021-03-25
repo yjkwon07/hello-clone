@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { addWorkSpaceMember as addWorkSpaceMemberAPI, useListworkspaceMember } from '@API/workspaceMember';
+import { requestAddWorkSpaceMember, useListworkspaceMember } from '@API/workspaceMember';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
@@ -21,14 +21,13 @@ type FormData = yup.InferType<typeof WORKSPACE_MEMBER_SCHEMA>;
 const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
   const { revalidate } = useListworkspaceMember({ workspace });
-
-  const [addError, setAddError] = useState('');
-  const [addSuccess, setAddSuccess] = useState(false);
-
   const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
     mode: 'onBlur',
     resolver: yupResolver(WORKSPACE_MEMBER_SCHEMA),
   });
+
+  const [addError, setAddError] = useState('');
+  const [addSuccess, setAddSuccess] = useState(false);
 
   const handleSubmit = useMemo(
     () =>
@@ -36,7 +35,7 @@ const AddWorkspaceMemberModal: FC<Props> = ({ show, onCloseModal }) => {
         setAddError('');
         setAddSuccess(false);
         try {
-          await addWorkSpaceMemberAPI({ email: formData.email }, { workspace });
+          await requestAddWorkSpaceMember({ email: formData.email }, { workspace });
           revalidate();
           setAddSuccess(true);
           onCloseModal();

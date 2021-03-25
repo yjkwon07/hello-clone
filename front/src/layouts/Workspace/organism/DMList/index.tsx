@@ -3,7 +3,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import cls from 'classnames';
 import { NavLink, useParams } from 'react-router-dom';
 
-import { useUser } from '@API/user/hooks/useUser';
+import { useUser } from '@API/user';
 import { useListworkspaceMember } from '@API/workspaceMember';
 import { ONLINE_LIST_WS, DM_WS, useWorkSpaceSocket } from '@API/ws';
 import { CollapseButton } from '@components/atoms';
@@ -24,12 +24,11 @@ const DMList: FC = () => {
     setDmCollapse((prev) => !prev);
   }, []);
 
-  const handleResetCount = useCallback(
-    (id) => () => {
+  const handleResetCount = useCallback((id) => {
+    return () => {
       setCountList((list) => ({ ...list, [id]: 0 }));
-    },
-    [],
-  );
+    };
+  }, []);
 
   useEffect(() => {
     setOnlineList([]);
@@ -88,7 +87,7 @@ const DMList: FC = () => {
                 />
                 <span className={cls({ bold: count })}>{member.nickname}</span>
                 {userData && member.id === userData.id && <span> (나)</span>}
-                {count > 0 && <span className="count">{count}</span>}
+                {!!count && <span className="count">{count}</span>}
               </NavLink>
             );
           })}

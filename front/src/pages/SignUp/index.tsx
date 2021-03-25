@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { signup as signupAPI, useUser } from '@API/user';
+import { requestSignup, useUser } from '@API/user';
 import { Button, ValidationInput, Label, Form } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
-import { LinkContainer, Header } from '@pages/SignUp/styles';
 import { GET_CHANNEL_URL, LOGIN_URL } from '@utils/url';
+
+import { LinkContainer, Header } from './styles';
 
 const SIGNUP_SCHEMA = yup.object({
   email: yup.string().email('올바르지 않은 이메일 양식입니다.').required('이메일은 필수 입력입니다.'),
@@ -29,14 +30,13 @@ type FormData = yup.InferType<typeof SIGNUP_SCHEMA>;
 
 const SignUp = () => {
   const { data: userData, error } = useUser();
-
-  const [signUpError, setSignUpError] = useState('');
-  const [signUpSuccess, setSignUpSuccess] = useState(false);
-
-  const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
+  const { register, handleSubmit: checkSubmit, errors, reset } = useForm<FormData>({
     mode: 'onBlur',
     resolver: yupResolver(SIGNUP_SCHEMA),
   });
+
+  const [signUpError, setSignUpError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const handleSubmit = useMemo(
     () =>
@@ -44,13 +44,14 @@ const SignUp = () => {
         setSignUpError('');
         setSignUpSuccess(false);
         try {
-          await signupAPI({ email: formData.email, nickname: formData.nickname, password: formData.password });
+          await requestSignup({ email: formData.email, nickname: formData.nickname, password: formData.password });
           setSignUpSuccess(true);
+          reset();
         } catch (err) {
           setSignUpError(err.response?.data);
         }
       }),
-    [checkSubmit],
+    [checkSubmit, reset],
   );
 
   if (!error && userData) {
@@ -59,7 +60,7 @@ const SignUp = () => {
 
   return (
     <div id="container">
-      <Header>urSleact</Header>
+      <Header>urTalk</Header>
       <Form onSubmit={handleSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>

@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import gravatar from 'gravatar';
 import Scrollbars from 'react-custom-scrollbars';
 import { useParams } from 'react-router-dom';
 
 import { useUser } from '@API/user';
-import { addWorkSpaceDmsChat, useInfiniteListWorkspaceDmsChat } from '@API/workspaceDmsChat';
+import { requestAddWorkSpaceDmsChat, useInfiniteListWorkspaceDmsChat } from '@API/workspaceDmsChat';
 import { useWorkspaceMember } from '@API/workspaceMember';
 import { useWorkSpaceSocket } from '@API/ws';
-import { ChatBox } from '@components/organism';
-import ChatList from '@components/organism/ChatList';
+import { ChatBox, ChatList } from '@components/organism';
 import useInput from '@hooks/useInput';
 import { IDM } from '@typings/db';
 import makeSection from '@utils/makeSection';
@@ -26,7 +25,7 @@ const DirectMessage = () => {
   const [socket] = useWorkSpaceSocket(workspace);
   const { data: userData } = useWorkspaceMember({ workspace, mberId });
   const { data: myData } = useUser();
-  const { data: chatData, mutate: mutateChat, revalidate, setSize } = useInfiniteListWorkspaceDmsChat(
+  const { data: chatListData, mutate: mutateChat, revalidate, setSize } = useInfiniteListWorkspaceDmsChat(
     {
       workspace,
       mberId,
@@ -34,19 +33,20 @@ const DirectMessage = () => {
     { perPage: PER_PAGE },
   );
 
-  const [chat, onChangeChat, setChat] = useInput('');
-  const isEmpty = chatData?.[0]?.length === 0;
-  const isReachingEndData = isEmpty || (chatData && chatData[chatData.length - 1]?.length < PER_PAGE) || false;
+  const [chat, handleChangeChat, setChat] = useInput('');
+  const isEmpty = chatListData?.[0]?.length === 0;
+  const isReachingEndData =
+    isEmpty || (chatListData && chatListData[chatListData.length - 1]?.length < PER_PAGE) || false;
   const scrollbarRef = useRef<Scrollbars>(null);
 
   const handleChatBoxSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       try {
-        if (chat?.trim() && chatData && myData && userData) {
-          await mutateChat((prevChatData) => {
-            prevChatData?.[0].unshift({
-              id: (chatData[0][0]?.id || 0) + 1,
+        if (chat?.trim() && chatListData && myData && userData) {
+          await mutateChat((prevChatListData) => {
+            prevChatListData?.[0].unshift({
+              id: (prevChatListData[0][0]?.id || 0) + 1,
               content: chat,
               SenderId: myData.id,
               Sender: myData,
@@ -54,27 +54,27 @@ const DirectMessage = () => {
               Receiver: userData,
               createdAt: new Date(),
             });
-            return prevChatData;
+            return prevChatListData;
           }, false);
           setChat('');
           scrollbarRef.current?.scrollToBottom();
-          await addWorkSpaceDmsChat({ content: chat }, { workspace, mberId });
-          revalidate();
+          await requestAddWorkSpaceDmsChat({ content: chat }, { workspace, mberId });
+          await revalidate();
         }
       } catch (error) {
         console.dir('error :>> ', error);
       }
     },
-    [chat, chatData, mberId, mutateChat, myData, revalidate, setChat, userData, workspace],
+    [chat, chatListData, mberId, mutateChat, myData, revalidate, setChat, userData, workspace],
   );
 
   const handleMessage = useCallback(
     async (data: IDM) => {
       try {
-        if (data.SenderId === Number(mberId) && myData && myData.id !== Number(mberId)) {
-          await mutateChat((prevChatData) => {
-            prevChatData?.[0].unshift(data);
-            return prevChatData;
+        if (data.SenderId === Number(mberId) && myData) {
+          await mutateChat((prevChatListData) => {
+            prevChatListData?.[0].unshift(data);
+            return prevChatListData;
           }, false);
           if (scrollbarRef.current) {
             if (
@@ -95,10 +95,10 @@ const DirectMessage = () => {
   );
 
   useEffect(() => {
-    if (chatData?.length === FIRST_LOAD_CHAT_DATA) {
+    if (chatListData?.length === FIRST_LOAD_CHAT_DATA) {
       scrollbarRef.current?.scrollToBottom();
     }
-  }, [chatData]);
+  }, [chatListData]);
 
   useEffect(() => {
     socket.on('dm', handleMessage);
@@ -107,7 +107,7 @@ const DirectMessage = () => {
     };
   }, [socket, handleMessage]);
 
-  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []);
+  const chatSections = useMemo(() => makeSection(chatListData ? chatListData.flat().reverse() : []), [chatListData]);
 
   if (!userData || !myData) {
     return null;
@@ -125,7 +125,7 @@ const DirectMessage = () => {
         setSize={setSize}
         isReachingEndData={isReachingEndData}
       />
-      <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={handleChatBoxSubmit} />
+      <ChatBox chat={chat} onChangeChat={handleChangeChat} onSubmitForm={handleChatBoxSubmit} />
     </Container>
   );
 };

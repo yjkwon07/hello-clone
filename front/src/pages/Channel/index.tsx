@@ -5,8 +5,8 @@ import { useParams } from 'react-router';
 
 import { useUser } from '@API/user';
 import { useWorkspaceChannel } from '@API/workspaceChannel';
-import { addWorkSpaceChannelChat, useInfiniteListtWorkspaceChannelChat } from '@API/workspaceChannelChat';
-import { useListWorkspaceChannelMember } from '@API/workspaceChannelMember';
+import { requestAddWorkSpaceChannelChat, useInfiniteListtWorkspaceChannelChat } from '@API/workspaceChannelChat';
+import useListWorkspaceChannelMember from '@API/workspaceChannelMember/hooks/useWorkspaceChannelMember';
 import { useWorkSpaceSocket } from '@API/ws';
 import ChatBox from '@components/organism/ChatBox';
 import ChatList from '@components/organism/ChatList';
@@ -27,7 +27,7 @@ const Channel = () => {
   const [socket] = useWorkSpaceSocket(workspace);
   const { data: myData } = useUser();
   const { data: channelData } = useWorkspaceChannel({ workspace, channel });
-  const { data: chatData, mutate: mutateChat, revalidate, setSize } = useInfiniteListtWorkspaceChannelChat(
+  const { data: chatListData, mutate: mutateChat, revalidate, setSize } = useInfiniteListtWorkspaceChannelChat(
     {
       workspace,
       channel,
@@ -36,9 +36,10 @@ const Channel = () => {
   );
   const { data: channelMembersData } = useListWorkspaceChannelMember({ workspace, channel });
 
-  const [chat, onChangeChat, setChat] = useInput('');
-  const isEmpty = chatData?.[0]?.length === 0;
-  const isReachingEndData = isEmpty || (chatData && chatData[chatData.length - 1]?.length < PER_PAGE) || false;
+  const [chat, handleChangeChat, setChat] = useInput('');
+  const isEmpty = chatListData?.[0]?.length === 0;
+  const isReachingEndData =
+    isEmpty || (chatListData && chatListData[chatListData.length - 1]?.length < PER_PAGE) || false;
   const scrollbarRef = useRef<Scrollbars>(null);
   const [showAddChannelMemberModal, setShowAddChannelMemberModal] = useState(false);
 
@@ -46,10 +47,10 @@ const Channel = () => {
     async (e) => {
       e.preventDefault();
       try {
-        if (chat?.trim() && chatData && myData && channelData) {
-          await mutateChat((prevChatData) => {
-            prevChatData?.[0].unshift({
-              id: (chatData[0][0]?.id || 0) + 1,
+        if (chat?.trim() && chatListData && myData && channelData) {
+          await mutateChat((prevChatListData) => {
+            prevChatListData?.[0].unshift({
+              id: (prevChatListData[0][0]?.id || 0) + 1,
               content: chat,
               UserId: myData.id,
               User: myData,
@@ -57,27 +58,27 @@ const Channel = () => {
               Channel: channelData,
               createdAt: new Date(),
             });
-            return prevChatData;
+            return prevChatListData;
           }, false);
           setChat('');
           scrollbarRef.current?.scrollToBottom();
-          await addWorkSpaceChannelChat({ content: chat }, { workspace, channel });
-          revalidate();
+          await requestAddWorkSpaceChannelChat({ content: chat }, { workspace, channel });
+          await revalidate();
         }
       } catch (error) {
         console.dir('error :>> ', error);
       }
     },
-    [chat, chatData, myData, channelData, mutateChat, setChat, workspace, channel, revalidate],
+    [chat, chatListData, myData, channelData, mutateChat, setChat, workspace, channel, revalidate],
   );
 
   const onMessage = useCallback(
     async (data: IChat) => {
       try {
-        if (data.Channel.name === channel && myData && data.UserId !== myData?.id) {
-          await mutateChat((prevChatData) => {
-            prevChatData?.[0].unshift(data);
-            return prevChatData;
+        if (data.Channel.name === channel && myData && myData?.id === data.UserId) {
+          await mutateChat((prevChatListData) => {
+            prevChatListData?.[0].unshift(data);
+            return prevChatListData;
           }, false);
           if (scrollbarRef.current) {
             if (
@@ -98,10 +99,10 @@ const Channel = () => {
   );
 
   useEffect(() => {
-    if (chatData?.length === FIRST_LOAD_CHAT_DATA) {
+    if (chatListData?.length === FIRST_LOAD_CHAT_DATA) {
       scrollbarRef.current?.scrollToBottom();
     }
-  }, [chatData]);
+  }, [chatListData]);
 
   useEffect(() => {
     socket.on('message', onMessage);
@@ -122,7 +123,7 @@ const Channel = () => {
     return null;
   }
 
-  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []);
+  const chatSections = makeSection(chatListData ? chatListData.flat().reverse() : []);
 
   return (
     <Container>
@@ -146,7 +147,7 @@ const Channel = () => {
         setSize={setSize}
         isReachingEndData={isReachingEndData}
       />
-      <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={handleChatBoxSubmit} />
+      <ChatBox chat={chat} onChangeChat={handleChangeChat} onSubmitForm={handleChatBoxSubmit} />
       <AddChannelMemberModal show={showAddChannelMemberModal} onCloseModal={handleCloseModal} />
     </Container>
   );

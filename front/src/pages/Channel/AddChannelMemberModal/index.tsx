@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { addChannelMember as addChannelMemberAPI, useListWorkspaceChannelMember } from '@API/workspaceChannelMember';
+import { requestAddChannelMember } from '@API/workspaceChannelMember';
+import useListWorkspaceChannelMember from '@API/workspaceChannelMember/hooks/useWorkspaceChannelMember';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
@@ -21,14 +22,13 @@ type FormData = yup.InferType<typeof CHANNEL_MEMBER_SCHEMA>;
 const AddChannelMemberModal: FC<Props> = ({ show, onCloseModal }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const { revalidate } = useListWorkspaceChannelMember({ workspace, channel });
-
-  const [addError, setAddError] = useState('');
-  const [addSuccess, setAddSuccess] = useState(false);
-
   const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
     mode: 'onBlur',
     resolver: yupResolver(CHANNEL_MEMBER_SCHEMA),
   });
+
+  const [addError, setAddError] = useState('');
+  const [addSuccess, setAddSuccess] = useState(false);
 
   const handleSubmit = useMemo(
     () =>
@@ -36,7 +36,7 @@ const AddChannelMemberModal: FC<Props> = ({ show, onCloseModal }) => {
         setAddError('');
         setAddSuccess(false);
         try {
-          await addChannelMemberAPI({ email: formData.email }, { workspace, channel });
+          await requestAddChannelMember({ email: formData.email }, { workspace, channel });
           revalidate();
           setAddSuccess(true);
           onCloseModal();

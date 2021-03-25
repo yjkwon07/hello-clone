@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { addWorkSpace as addWorkSpaceAPI, useListWorkspace } from '@API/workspace';
+import { requestAddWorkspace, useListWorkspace } from '@API/workspace';
 import { Button, Label, ValidationInput } from '@components/atoms';
 import Modal, { Props as IModal } from '@components/atoms/Modal';
 import { ConfirmModal } from '@components/modals';
@@ -20,14 +20,13 @@ type FormData = yup.InferType<typeof WORKSPACE_SCHEMA>;
 
 const AddWorkSpaceModal: FC<Props> = ({ show, onCloseModal }) => {
   const { revalidate } = useListWorkspace();
-
-  const [addError, setAddError] = useState('');
-  const [addSuccess, setAddSuccess] = useState(false);
-
   const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
     mode: 'onBlur',
     resolver: yupResolver(WORKSPACE_SCHEMA),
   });
+
+  const [addError, setAddError] = useState('');
+  const [addSuccess, setAddSuccess] = useState(false);
 
   const handleSubmit = useMemo(
     () =>
@@ -35,7 +34,7 @@ const AddWorkSpaceModal: FC<Props> = ({ show, onCloseModal }) => {
         setAddError('');
         setAddSuccess(false);
         try {
-          await addWorkSpaceAPI({ workspace: formData.workspace, url: formData.url });
+          await requestAddWorkspace({ workspace: formData.workspace, url: formData.url });
           revalidate();
           setAddSuccess(true);
           onCloseModal();

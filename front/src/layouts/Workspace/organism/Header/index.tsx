@@ -2,13 +2,14 @@ import React, { useCallback, useState, VFC } from 'react';
 
 import gravatar from 'gravatar';
 
-import { logout as logoutAPI, useUser } from '@API/user';
+import { requestLogout, useUser } from '@API/user';
 import Menu from '@components/atoms/Menu';
 
 import { Container, ImgButton, LogOutButton, ProfileImg, ProfileMenu, RightMenu } from './styles';
 
 const Header: VFC = () => {
   const { data: userData, mutate } = useUser();
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleToggleProfileMenu = useCallback(() => {
@@ -22,7 +23,7 @@ const Header: VFC = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      await logoutAPI();
+      await requestLogout();
       mutate(false, false);
     } catch (err) {
       console.dir('err :>> ', err);

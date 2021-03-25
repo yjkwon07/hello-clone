@@ -1,17 +1,12 @@
-/**
- * * 워크스페이스를 생성함 POST
- * * /api/workspaces
- * * return: IWorkspace
- */
-export function addWorkSpaceAPI() {
-  return '/api/workspaces';
-}
+import { axios } from '@API/client';
+import { GET_ADD_WORKSPACE_API, GET_LIST_READ_WORKSPACE_API } from '@API/workspace/api';
+import { IAddWorkSpaceBodyQuery } from '@API/workspace/type';
+import { IWorkspace } from '@typings/db';
 
-/**
- * * 내 워크스페이스 목록을 가져옴 GET
- * * /api/workspaces
- * * return: IWorkspace[]
- */
-export function listReadWorkSpaceAPI() {
-  return '/api/workspaces';
-}
+export const requestAddWorkspace = (data: IAddWorkSpaceBodyQuery) => {
+  return axios.post<IWorkspace>(GET_ADD_WORKSPACE_API(), data);
+};
+
+export const requestListReadWorkspace = () => {
+  return axios.post<IWorkspace[]>(GET_LIST_READ_WORKSPACE_API());
+};

@@ -1,14 +1,10 @@
 import useSWR from 'swr';
 
-import { listReadChannelAPI, readChannelAPI } from '@API/workspaceChannel/requestAPI';
+import { GET_READ_CHANNEL_API } from '@API/workspaceChannel/api';
 import { IChannel } from '@typings/db';
 
-import { IAddCWorkspaceChannelURL, IReadWorkspaceChannelURL } from '../type';
+import { IReadWorkspaceChannelURL } from '../type';
 
-export function useWorkspaceChannel(url: IReadWorkspaceChannelURL) {
-  return useSWR<IChannel>(readChannelAPI(url));
-}
-
-export function useListWorkspaceChannel(url: IAddCWorkspaceChannelURL) {
-  return useSWR<IChannel[]>(listReadChannelAPI(url));
+export default function useWorkspaceChannel(url: IReadWorkspaceChannelURL) {
+  return useSWR<IChannel>(GET_READ_CHANNEL_API(url));
 }

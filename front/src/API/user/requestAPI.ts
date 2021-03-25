@@ -1,35 +1,20 @@
-/**
- * * 회원가입 POST
- * * /api/users
- * * return 'ok'
- */
-export function signupAPI() {
-  return '/api/users';
-}
+import { axios } from '@API/client';
+import { GET_LOGIN_API, GET_LOGOUT_API, GET_SIGNUP_API, GET_USER_API } from '@API/user/api';
+import { ILoginBodyQuery, ISignupBodyQuery } from '@API/user/type';
+import { IUser } from '@typings/db';
 
-/**
- * * 로그인 POST
- * * /api/users/login
- * * return: IUser
- */
-export function loginAPI() {
-  return '/api/users/login';
-}
+export const requestSignup = (data: ISignupBodyQuery) => {
+  return axios.post<IUser>(GET_SIGNUP_API(), data);
+};
 
-/**
- * * 로그아웃 POST
- * * /api/users/logout
- * * return 'ok'
- */
-export function logoutAPI() {
-  return '/api/users/logout';
-}
+export const requestLogin = (data: ILoginBodyQuery) => {
+  return axios.post<IUser>(GET_LOGIN_API(), data);
+};
 
-/**
- * * 내 로그인 정보를 가져옴 GET
- * * /api/users
- * * return: IUser, 로그인되어있지 않으면 false
- */
-export function userAPI() {
-  return '/api/users';
-}
+export const requestLogout = () => {
+  return axios.post<string>(GET_LOGOUT_API());
+};
+
+export const requestReadUser = () => {
+  return axios.post<string>(GET_USER_API());
+};

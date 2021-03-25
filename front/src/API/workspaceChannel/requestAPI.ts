@@ -1,28 +1,22 @@
-import { IAddCWorkspaceChannelURL, IListReadWorkspaceChannelURL, IReadWorkspaceChannelURL } from './type';
+import { axios } from '@API/client';
+import { IChannel } from '@typings/db';
 
-/**
- * * :workspace 내부에 채널을 생성함 POST
- * * api/workspaces/{workspace}/channels
- * * return: IChannel
- */
-export function addChannelAPI(url: IAddCWorkspaceChannelURL) {
-  return `api/workspaces/${url.workspace}/channels`;
-}
+import { GET_ADD_CHANNEL_API, GET_LIST_READ_CHANNEL_API, GET_READ_CHANNEL_API } from './api';
+import {
+  IAddCWorkspaceChannelURL,
+  IAddWorkspaceChannelBodyQuery,
+  IListReadWorkspaceChannelURL,
+  IReadWorkspaceChannelURL,
+} from './type';
 
-/**
- * * :workspace 내부의 내가 속해있는 채널 리스트를 가져옴 GET
- * * api/workspaces/{workspace}/channels
- * * return: IChannel[]
- */
-export function listReadChannelAPI(url: IListReadWorkspaceChannelURL) {
-  return `api/workspaces/${url.workspace}/channels`;
-}
+export const requestAddChannel = (data: IAddWorkspaceChannelBodyQuery, url: IAddCWorkspaceChannelURL) => {
+  return axios.post<IChannel>(GET_ADD_CHANNEL_API(url), data);
+};
 
-/**
- * * :workspace 내부의 :channel 정보를 가져옴 GET
- * * api/workspaces/{workspace}/channels/{channel}
- * * return: IChannel
- */
-export function readChannelAPI(url: IReadWorkspaceChannelURL) {
-  return `api/workspaces/${url.workspace}/channels/${url.channel}`;
-}
+export const requestListReadChannel = (url: IListReadWorkspaceChannelURL) => {
+  return axios.get<IChannel[]>(GET_LIST_READ_CHANNEL_API(url));
+};
+
+export const requestReadChannel = (url: IReadWorkspaceChannelURL) => {
+  return axios.get<IChannel>(GET_READ_CHANNEL_API(url));
+};

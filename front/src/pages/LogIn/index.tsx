@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { login as loginAPI, useUser } from '@API/user';
+import { requestLogin, useUser } from '@API/user';
 import { Button, Label, ValidationInput, Form } from '@components/atoms';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import { LinkContainer, Header } from '@pages/SignUp/styles';
@@ -20,27 +20,24 @@ type FormData = yup.InferType<typeof LOGIN_SCHEMA>;
 
 const LogIn = () => {
   const { data: userData, error, mutate } = useUser();
-
-  const [logInError, setLogInError] = useState(false);
-
   const { register, handleSubmit: checkSubmit, errors } = useForm<FormData>({
     mode: 'onBlur',
     resolver: yupResolver(LOGIN_SCHEMA),
   });
 
-  const handleSubmit = useMemo(
-    () =>
-      checkSubmit(async (formData) => {
-        setLogInError(false);
-        try {
-          const response = await loginAPI({ email: formData.email, password: formData.password });
-          mutate(response.data, false);
-        } catch (err) {
-          setLogInError(err.response?.status === 401);
-        }
-      }),
-    [checkSubmit, mutate],
-  );
+  const [logInError, setLogInError] = useState(false);
+
+  const handleSubmit = useMemo(() => {
+    return checkSubmit(async (formData) => {
+      setLogInError(false);
+      try {
+        const response = await requestLogin({ email: formData.email, password: formData.password });
+        await mutate(response.data, false);
+      } catch (err) {
+        setLogInError(err.response?.status === 401);
+      }
+    });
+  }, [checkSubmit, mutate]);
 
   if (!error && userData) {
     return <Redirect to={GET_CHANNEL_URL('sleact', '일반')} />;
@@ -48,7 +45,7 @@ const LogIn = () => {
 
   return (
     <div id="container">
-      <Header>urSleact</Header>
+      <Header>urTalk</Header>
       <Form onSubmit={handleSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>

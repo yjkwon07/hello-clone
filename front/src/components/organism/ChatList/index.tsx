@@ -9,21 +9,21 @@ import { ChatZone, Section, StickyHeader } from './styles';
 
 interface Props {
   chatSections: { [key: string]: (IDM | IChat)[] };
+  scrollRef: RefObject<Scrollbars>;
   setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>;
   isReachingEndData: boolean;
-  scrollRef: RefObject<Scrollbars>;
 }
 
 const TOP = 0;
 
 const ChatList: VFC<Props> = ({ chatSections, setSize, scrollRef, isReachingEndData }) => {
-  const onScroll = useCallback(
+  const handleScroll = useCallback(
     async (values) => {
       try {
         if (values.scrollTop === TOP && !isReachingEndData) {
+          const currentScrollRef = (scrollRef as MutableRefObject<Scrollbars>)?.current;
           await setSize((prevSize) => prevSize + 1);
           // 스크롤 위치 유지
-          const currentScrollRef = (scrollRef as MutableRefObject<Scrollbars>)?.current;
           if (currentScrollRef) {
             currentScrollRef.scrollTop(currentScrollRef.getScrollHeight() - values.scrollHeight);
           }
@@ -37,7 +37,7 @@ const ChatList: VFC<Props> = ({ chatSections, setSize, scrollRef, isReachingEndD
 
   return (
     <ChatZone>
-      <Scrollbars autoHide ref={scrollRef} onScrollFrame={onScroll}>
+      <Scrollbars autoHide ref={scrollRef} onScrollFrame={handleScroll}>
         {Object.entries(chatSections).map(([date, chats]) => {
           return (
             <Section className={`section-${date}`} key={date}>

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+// eslint-disable-next-line import/prefer-default-export
 export const ChatWrapper = styled.div`
   display: flex;
   padding: 8px 20px;

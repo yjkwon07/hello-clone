@@ -15,7 +15,7 @@ const App = () => {
   return (
     <SWRConfig
       value={{
-        dedupingInterval: 10000,
+        dedupingInterval: 5000,
         // refreshInterval: 300000,
         fetcher,
       }}

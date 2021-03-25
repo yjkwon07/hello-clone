@@ -18,7 +18,7 @@ const Chat: VFC<Props> = ({ data }) => {
   const { workspace } = useParams<{ workspace: string; channel: string }>();
   const user = 'Sender' in data ? data.Sender : data.User;
 
-  const result = useMemo(
+  const chatData = useMemo(
     () =>
       regexifyString({
         input: data.content,
@@ -48,7 +48,7 @@ const Chat: VFC<Props> = ({ data }) => {
           <b>{user.nickname}</b>
           <span>{dayjs(data.createdAt).format('h:mm A')}</span>
         </div>
-        <p>{result}</p>
+        <p>{chatData}</p>
       </div>
     </ChatWrapper>
   );
